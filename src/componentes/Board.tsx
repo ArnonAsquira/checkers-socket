@@ -23,13 +23,24 @@ const initailPlayersLocations: { red: Location[]; blue: Location[] } = {
 };
 
 const Board = () => {
-  const [turn, setTurn] = useState("red");
+  const [turn, setTurn] = useState<"red" | "blue">("red");
+
   const [postions, setPosition] = useState<{
     red: Location[];
     blue: Location[];
   }>(initailPlayersLocations);
+
   const [indicatorLocations, setIndiCatorLocations] = useState<Location[]>([]);
-  console.log(indicatorLocations.includes([4, 7]), indicatorLocations);
+
+  const takeTurn = (newLocation: Location, oldLocation: Location) => {
+    setTurn((player) => (player === "red" ? "blue" : "red"));
+    setPosition((positions) => ({
+      ...positions,
+      [turn]: postions[turn]
+        .filter((playerLocation) => arrayEqual(playerLocation, oldLocation))
+        .concat(newLocation),
+    }));
+  };
 
   const rows = [];
   for (let i = 0; i < quardinatnts.length; i += amountOfRows) {
