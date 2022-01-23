@@ -1,6 +1,6 @@
 import Player from "./Player";
 import { Location } from "../types/boardTypes";
-import { Dispatch, useState } from "react";
+import { Dispatch } from "react";
 import PossibleMoveIndicator from "./PossibleMoveIndicator";
 
 interface BoardSqaureProps {
