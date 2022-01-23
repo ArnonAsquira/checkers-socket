@@ -28,15 +28,28 @@ const Board = () => {
     red: Location[];
     blue: Location[];
   }>(initailPlayersLocations);
-  const [indicatorLocations, setIndiCatorLocations] = useState<Location[]>([]);
   const [selectedPiece, setSelectedPiece] = useState<Location | null>(null);
+
+  const indicatorLocations = ((): Location[] => {
+    if (selectedPiece === null) return [];
+
+    return postions["red"].filter((position) =>
+      arrayEqual(position, selectedPiece)
+    ).length !== 1
+      ? [
+          [selectedPiece[0] - 1, selectedPiece[1] + 1],
+          [selectedPiece[0] - 1, selectedPiece[1] - 1],
+        ]
+      : [
+          [selectedPiece[0] + 1, selectedPiece[1] + 1],
+          [selectedPiece[0] + 1, selectedPiece[1] - 1],
+        ];
+  })();
+
+  console.log(indicatorLocations);
 
   const takeTurn = (newLocation: Location) => {
     if (selectedPiece === null) return alert("please select a piece");
-    console.log(
-      postions[turn].filter((position) => arrayEqual(position, selectedPiece))
-        .length
-    );
     if (
       postions[turn].filter((position) => arrayEqual(position, selectedPiece))
         .length !== 1
@@ -47,7 +60,6 @@ const Board = () => {
         .filter((playerLocation) => !arrayEqual(playerLocation, selectedPiece))
         .concat([newLocation])
     );
-    setIndiCatorLocations([]);
     setPosition((positions) => ({
       ...positions,
       [turn]: postions[turn]
@@ -55,6 +67,7 @@ const Board = () => {
         .concat([newLocation]),
     }));
     setTurn((player) => (player === "red" ? "blue" : "red"));
+    setSelectedPiece(null);
   };
 
   const rows = [];
@@ -78,7 +91,6 @@ const Board = () => {
                 ? "indicator"
                 : undefined
             }
-            setIndiCatorLocations={setIndiCatorLocations}
             setPosition={setPosition}
             setSelectedPiece={setSelectedPiece}
             isSelectedPiece={

@@ -7,7 +7,6 @@ interface BoardSqaureProps {
   location: Location;
   color: "light" | "dark";
   player: "red" | "blue" | "indicator" | undefined;
-  setIndiCatorLocations: Dispatch<Location[]>;
   setPosition: Dispatch<{ red: Location[]; blue: Location[] }>;
   setSelectedPiece: Dispatch<React.SetStateAction<Location | null>>;
   isSelectedPiece: boolean;
@@ -18,7 +17,6 @@ const BoardSqaure = ({
   location,
   color,
   player,
-  setIndiCatorLocations,
   setPosition,
   setSelectedPiece,
   isSelectedPiece,
@@ -26,15 +24,6 @@ const BoardSqaure = ({
 }: BoardSqaureProps) => {
   const handlePieceClick = (location: Location, player: "red" | "blue") => {
     setSelectedPiece(location);
-    player === "red"
-      ? setIndiCatorLocations([
-          [location[0] + 1, location[1] + 1],
-          [location[0] + 1, location[1] - 1],
-        ])
-      : setIndiCatorLocations([
-          [location[0] - 1, location[1] + 1],
-          [location[0] - 1, location[1] - 1],
-        ]);
   };
 
   return (
