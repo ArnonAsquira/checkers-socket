@@ -7,7 +7,6 @@ interface BoardSqaureProps {
   location: Location;
   color: "light" | "dark";
   player: "red" | "blue" | "indicator" | undefined;
-  setPosition: Dispatch<{ red: Location[]; blue: Location[] }>;
   setSelectedPiece: Dispatch<React.SetStateAction<Location | null>>;
   isSelectedPiece: boolean;
   takeTurn: (newLocation: Location) => void;
@@ -17,7 +16,6 @@ const BoardSqaure = ({
   location,
   color,
   player,
-  setPosition,
   setSelectedPiece,
   isSelectedPiece,
   takeTurn,
@@ -28,7 +26,7 @@ const BoardSqaure = ({
 
   return (
     <div className={color}>
-      {/* {location[0]}, {location[1]} */}
+      {location[0]}, {location[1]}
       {player ? (
         player === "indicator" ? (
           <PossibleMoveIndicator location={location} handleClick={takeTurn} />

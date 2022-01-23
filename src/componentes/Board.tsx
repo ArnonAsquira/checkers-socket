@@ -1,5 +1,5 @@
 import BoardSqaure from "./BoardSquare";
-import { Location } from "../types/boardTypes";
+import { IndicatorInfo, Location } from "../types/boardTypes";
 import { useState } from "react";
 import arrayEqual from "./utils/arrayEqual";
 
@@ -30,23 +30,70 @@ const Board = () => {
   }>(initailPlayersLocations);
   const [selectedPiece, setSelectedPiece] = useState<Location | null>(null);
 
-  const indicatorLocations = ((): Location[] => {
+  const threatendPieces = (
+    indicatorLocationsProp: [Location, Location]
+  ): Location[] => {
+    return postions[turn === "red" ? "blue" : "red"].filter(
+      (position) =>
+        arrayEqual(position, indicatorLocationsProp[0]) ||
+        arrayEqual(position, indicatorLocationsProp[1])
+    );
+  };
+
+  const indicatorLocations = ((): IndicatorInfo[] => {
     if (selectedPiece === null) return [];
 
-    return postions["red"].filter((position) =>
-      arrayEqual(position, selectedPiece)
-    ).length !== 1
-      ? [
-          [selectedPiece[0] - 1, selectedPiece[1] + 1],
-          [selectedPiece[0] - 1, selectedPiece[1] - 1],
-        ]
-      : [
-          [selectedPiece[0] + 1, selectedPiece[1] + 1],
-          [selectedPiece[0] + 1, selectedPiece[1] - 1],
-        ];
-  })();
+    const locations: [IndicatorInfo, IndicatorInfo] =
+      postions["red"].filter((position) => arrayEqual(position, selectedPiece))
+        .length !== 1
+        ? [
+            {
+              location: [selectedPiece[0] - 1, selectedPiece[1] + 1],
+              endangers: null,
+            },
+            {
+              location: [selectedPiece[0] - 1, selectedPiece[1] - 1],
+              endangers: null,
+            },
+          ]
+        : [
+            {
+              location: [selectedPiece[0] + 1, selectedPiece[1] + 1],
+              endangers: null,
+            },
+            {
+              location: [selectedPiece[0] + 1, selectedPiece[1] - 1],
+              endangers: null,
+            },
+          ];
 
-  console.log(indicatorLocations);
+    const threatLocations = threatendPieces([
+      locations[0].location,
+      locations[1].location,
+    ]);
+    if (threatLocations.length > 0) {
+      threatLocations.forEach((pieceLocation) => {
+        const newLocation: Location =
+          turn === "red"
+            ? selectedPiece[1] - 1 === pieceLocation[1]
+              ? [pieceLocation[0] + 1, pieceLocation[1] - 1]
+              : [pieceLocation[0] + 1, pieceLocation[1] + 1]
+            : selectedPiece[1] - 1 === pieceLocation[1]
+            ? [pieceLocation[0] - 1, pieceLocation[1] - 1]
+            : [pieceLocation[0] - 1, pieceLocation[1] + 1];
+
+        locations.splice(
+          locations.findIndex((info) =>
+            arrayEqual(info.location, pieceLocation)
+          ),
+          1,
+          { location: newLocation, endangers: pieceLocation }
+        );
+      });
+      console.log(locations);
+    }
+    return locations;
+  })();
 
   const takeTurn = (newLocation: Location) => {
     if (selectedPiece === null) return alert("please select a piece");
@@ -55,16 +102,27 @@ const Board = () => {
         .length !== 1
     )
       return alert(`it's ${turn}'s turn`);
-    console.log(
-      postions[turn]
-        .filter((playerLocation) => !arrayEqual(playerLocation, selectedPiece))
-        .concat([newLocation])
+    const indicatorInfo: IndicatorInfo | undefined = indicatorLocations.find(
+      (info) => arrayEqual(info.location, newLocation)
     );
+
+    if (indicatorInfo && indicatorInfo.endangers) {
+      console.log(indicatorInfo.endangers);
+    }
+    const oppositeColor = turn === "red" ? "blue" : "red";
+
     setPosition((positions) => ({
       ...positions,
       [turn]: postions[turn]
         .filter((playerLocation) => !arrayEqual(playerLocation, selectedPiece))
         .concat([newLocation]),
+      [oppositeColor]:
+        indicatorInfo && indicatorInfo.endangers !== null
+          ? postions[oppositeColor].filter(
+              (playerLocation) =>
+                !arrayEqual(indicatorInfo.endangers as Location, playerLocation)
+            )
+          : postions[oppositeColor],
     }));
     setTurn((player) => (player === "red" ? "blue" : "red"));
     setSelectedPiece(null);
@@ -85,13 +143,12 @@ const Board = () => {
                 ? "blue"
                 : indicatorLocations
                     .map((indicatorLocation) =>
-                      arrayEqual(indicatorLocation, location)
+                      arrayEqual(indicatorLocation.location, location)
                     )
                     .includes(true)
                 ? "indicator"
                 : undefined
             }
-            setPosition={setPosition}
             setSelectedPiece={setSelectedPiece}
             isSelectedPiece={
               selectedPiece === null
@@ -105,7 +162,12 @@ const Board = () => {
     );
   }
 
-  return <div id="board">{rows.map((row) => row)}</div>;
+  return (
+    <div id="board">
+      {`${turn}'s turn`}
+      {rows.map((row) => row)}
+    </div>
+  );
 };
 
 export default Board;
