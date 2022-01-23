@@ -5,4 +5,16 @@ interface IndicatorInfo {
 
 type Location = [number, number];
 
-export type { Location, IndicatorInfo };
+interface IDiagonalSquares {
+  rightDown: Location;
+  rightUp: Location;
+  leftDown: Location;
+  leftUp: Location;
+}
+
+interface IBoardPositions {
+  red: Location[];
+  blue: Location[];
+}
+
+export type { Location, IndicatorInfo, IDiagonalSquares, IBoardPositions };

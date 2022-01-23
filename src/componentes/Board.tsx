@@ -7,6 +7,7 @@ import {
   amountOfRows,
   quardinatnts,
 } from "./utils/boardBuild";
+import indicatorLocations from "./utils/boardUtils";
 
 const Board = () => {
   const [turn, setTurn] = useState<"red" | "blue">("red");
@@ -16,79 +17,13 @@ const Board = () => {
   }>(initailPlayersLocations);
   const [selectedPiece, setSelectedPiece] = useState<Location | null>(null);
 
-  const threatendPieces = (
-    indicatorLocationsProp: [Location, Location]
-  ): Location[] => {
-    return postions[turn === "red" ? "blue" : "red"].filter(
-      (position) =>
-        arrayEqual(position, indicatorLocationsProp[0]) ||
-        arrayEqual(position, indicatorLocationsProp[1])
-    );
-  };
+  const currentIndicatorLocations = indicatorLocations(
+    selectedPiece,
+    postions,
+    turn
+  );
 
-  const diagonalSquares = (location: Location) => {
-    return {
-      rightDown: [location[0] + 1, location[1] + 1],
-      rightUp: [location[0] - 1, location[1] + 1],
-      leftDown: [location[0] + 1, location[1] - 1],
-      leftUp: [location[0] + 1, location[1] - 1],
-    };
-  };
-
-  const indicatorLocations = ((): IndicatorInfo[] => {
-    if (selectedPiece === null) return [];
-
-    const locations: [IndicatorInfo, IndicatorInfo] =
-      postions["red"].filter((position) => arrayEqual(position, selectedPiece))
-        .length !== 1
-        ? [
-            {
-              location: [selectedPiece[0] - 1, selectedPiece[1] + 1],
-              endangers: null,
-            },
-            {
-              location: [selectedPiece[0] - 1, selectedPiece[1] - 1],
-              endangers: null,
-            },
-          ]
-        : [
-            {
-              location: [selectedPiece[0] + 1, selectedPiece[1] + 1],
-              endangers: null,
-            },
-            {
-              location: [selectedPiece[0] + 1, selectedPiece[1] - 1],
-              endangers: null,
-            },
-          ];
-
-    const threatLocations = threatendPieces([
-      locations[0].location,
-      locations[1].location,
-    ]);
-    if (threatLocations.length > 0) {
-      threatLocations.forEach((pieceLocation) => {
-        const newLocation: Location =
-          turn === "red"
-            ? selectedPiece[1] - 1 === pieceLocation[1]
-              ? [pieceLocation[0] + 1, pieceLocation[1] - 1]
-              : [pieceLocation[0] + 1, pieceLocation[1] + 1]
-            : selectedPiece[1] - 1 === pieceLocation[1]
-            ? [pieceLocation[0] - 1, pieceLocation[1] - 1]
-            : [pieceLocation[0] - 1, pieceLocation[1] + 1];
-
-        locations.splice(
-          locations.findIndex((info) =>
-            arrayEqual(info.location, pieceLocation)
-          ),
-          1,
-          { location: newLocation, endangers: pieceLocation }
-        );
-      });
-      console.log(locations);
-    }
-    return locations;
-  })();
+  console.log(currentIndicatorLocations);
 
   const takeTurn = (newLocation: Location) => {
     if (selectedPiece === null) return alert("please select a piece");
@@ -97,13 +32,10 @@ const Board = () => {
         .length !== 1
     )
       return alert(`it's ${turn}'s turn`);
-    const indicatorInfo: IndicatorInfo | undefined = indicatorLocations.find(
-      (info) => arrayEqual(info.location, newLocation)
-    );
-
-    if (indicatorInfo && indicatorInfo.endangers) {
-      console.log(indicatorInfo.endangers);
-    }
+    const indicatorInfo: IndicatorInfo | undefined =
+      currentIndicatorLocations.find((info) =>
+        arrayEqual(info.location, newLocation)
+      );
     const oppositeColor = turn === "red" ? "blue" : "red";
 
     setPosition((positions) => ({
@@ -119,8 +51,15 @@ const Board = () => {
             )
           : postions[oppositeColor],
     }));
-    setTurn((player) => (player === "red" ? "blue" : "red"));
-    setSelectedPiece(null);
+    const consecutiveDanger = indicatorLocations(
+      newLocation,
+      postions,
+      turn
+    ).filter((info) => info.endangers);
+    if (consecutiveDanger.length < 1) {
+      setTurn((player) => (player === "red" ? "blue" : "red"));
+    }
+    setSelectedPiece(newLocation);
   };
 
   const rows = [];
@@ -136,7 +75,7 @@ const Board = () => {
                 ? "red"
                 : postions.blue.includes(location)
                 ? "blue"
-                : indicatorLocations
+                : currentIndicatorLocations
                     .map((indicatorLocation) =>
                       arrayEqual(indicatorLocation.location, location)
                     )
