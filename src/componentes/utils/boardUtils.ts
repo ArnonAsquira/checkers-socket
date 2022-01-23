@@ -95,13 +95,7 @@ const indicatorLocations = (
           ).length > 0
         )
     )
-    .filter((info) =>
-      first
-        ? true
-        : (Math.sign(info.location[0] - pieceLocationProp[0]) === -1
-            ? -1 * (info.location[0] - pieceLocationProp[0])
-            : info.location[0] - pieceLocationProp[0]) > 1
-    );
+    .filter((info) => (first ? true : info.endangers !== null));
 };
 
 export default indicatorLocations;

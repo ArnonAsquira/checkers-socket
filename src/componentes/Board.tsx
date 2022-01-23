@@ -70,10 +70,11 @@ const Board = () => {
     ) {
       setTurnCounter(0);
       setTurn((player) => (player === "red" ? "blue" : "red"));
+      setSelectedPiece(null);
     } else {
       setTurnCounter((counter) => counter + 1);
+      setSelectedPiece(newLocation);
     }
-    setSelectedPiece(newLocation);
   };
 
   const rows = [];
