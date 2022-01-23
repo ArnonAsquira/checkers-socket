@@ -1,30 +1,25 @@
-import { Dispatch } from "react";
 import { Location } from "../types/boardTypes";
+
+interface PlayerProps {
+  position: Location;
+  owner: "red" | "blue";
+  isSelectedPiece: boolean;
+  handlePieceClick: (location: Location, player: "red" | "blue") => void;
+}
 
 const player = ({
   position,
   owner,
-  setIndiCatorLocations,
-}: {
-  position: Location;
-  owner: "red" | "blue";
-  setIndiCatorLocations: Dispatch<Location[]>;
-}) => {
-  const showPossibleMoves = () => {
-    owner === "red"
-      ? setIndiCatorLocations([
-          [position[0] + 1, position[1] + 1],
-          [position[0] + 1, position[1] - 1],
-        ])
-      : setIndiCatorLocations([
-          [position[0] - 1, position[1] + 1],
-          [position[0] - 1, position[1] - 1],
-        ]);
-  };
+  isSelectedPiece,
+  handlePieceClick,
+}: PlayerProps) => {
   return (
     <div
+      style={{ border: isSelectedPiece ? "2px solid gold" : "none" }}
       className={`${owner}-player`}
-      onClick={() => showPossibleMoves()}
+      onClick={() => {
+        handlePieceClick(position, owner);
+      }}
     ></div>
   );
 };

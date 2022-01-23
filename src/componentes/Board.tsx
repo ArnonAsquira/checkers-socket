@@ -24,22 +24,37 @@ const initailPlayersLocations: { red: Location[]; blue: Location[] } = {
 
 const Board = () => {
   const [turn, setTurn] = useState<"red" | "blue">("red");
-
   const [postions, setPosition] = useState<{
     red: Location[];
     blue: Location[];
   }>(initailPlayersLocations);
-
   const [indicatorLocations, setIndiCatorLocations] = useState<Location[]>([]);
+  const [selectedPiece, setSelectedPiece] = useState<Location | null>(null);
 
-  const takeTurn = (newLocation: Location, oldLocation: Location) => {
-    setTurn((player) => (player === "red" ? "blue" : "red"));
+  const takeTurn = (newLocation: Location) => {
+    if (selectedPiece === null) return alert("please select a piece");
+    console.log(
+      postions[turn].filter((position) => arrayEqual(position, selectedPiece))
+        .length
+    );
+    if (
+      postions[turn].filter((position) => arrayEqual(position, selectedPiece))
+        .length !== 1
+    )
+      return alert(`it's ${turn}'s turn`);
+    console.log(
+      postions[turn]
+        .filter((playerLocation) => !arrayEqual(playerLocation, selectedPiece))
+        .concat([newLocation])
+    );
+    setIndiCatorLocations([]);
     setPosition((positions) => ({
       ...positions,
       [turn]: postions[turn]
-        .filter((playerLocation) => arrayEqual(playerLocation, oldLocation))
-        .concat(newLocation),
+        .filter((playerLocation) => !arrayEqual(playerLocation, selectedPiece))
+        .concat([newLocation]),
     }));
+    setTurn((player) => (player === "red" ? "blue" : "red"));
   };
 
   const rows = [];
@@ -65,6 +80,13 @@ const Board = () => {
             }
             setIndiCatorLocations={setIndiCatorLocations}
             setPosition={setPosition}
+            setSelectedPiece={setSelectedPiece}
+            isSelectedPiece={
+              selectedPiece === null
+                ? false
+                : arrayEqual(selectedPiece, location)
+            }
+            takeTurn={takeTurn}
           />
         ))}
       </div>

@@ -1,32 +1,54 @@
 import Player from "./Player";
 import { Location } from "../types/boardTypes";
-import { Dispatch } from "react";
+import { Dispatch, useState } from "react";
 import PossibleMoveIndicator from "./PossibleMoveIndicator";
+
+interface BoardSqaureProps {
+  location: Location;
+  color: "light" | "dark";
+  player: "red" | "blue" | "indicator" | undefined;
+  setIndiCatorLocations: Dispatch<Location[]>;
+  setPosition: Dispatch<{ red: Location[]; blue: Location[] }>;
+  setSelectedPiece: Dispatch<React.SetStateAction<Location | null>>;
+  isSelectedPiece: boolean;
+  takeTurn: (newLocation: Location) => void;
+}
+
 const BoardSqaure = ({
   location,
   color,
   player,
   setIndiCatorLocations,
   setPosition,
-}: {
-  location: Location;
-  color: "light" | "dark";
-  player: "red" | "blue" | "indicator" | undefined;
-  setIndiCatorLocations: Dispatch<Location[]>;
-  setPosition: Dispatch<{ red: Location[]; blue: Location[] }>;
-}) => {
-  const takeTurn = () => {};
+  setSelectedPiece,
+  isSelectedPiece,
+  takeTurn,
+}: BoardSqaureProps) => {
+  const handlePieceClick = (location: Location, player: "red" | "blue") => {
+    setSelectedPiece(location);
+    player === "red"
+      ? setIndiCatorLocations([
+          [location[0] + 1, location[1] + 1],
+          [location[0] + 1, location[1] - 1],
+        ])
+      : setIndiCatorLocations([
+          [location[0] - 1, location[1] + 1],
+          [location[0] - 1, location[1] - 1],
+        ]);
+  };
+
   return (
     <div className={color}>
-      {location[0]}, {location[1]}
+      {/* {location[0]}, {location[1]} */}
       {player ? (
         player === "indicator" ? (
-          <PossibleMoveIndicator />
+          <PossibleMoveIndicator location={location} handleClick={takeTurn} />
         ) : (
           <Player
             position={location}
             owner={player}
-            setIndiCatorLocations={setIndiCatorLocations}
+            isSelectedPiece={isSelectedPiece}
+            handlePieceClick={handlePieceClick}
           />
         )
       ) : null}
