@@ -30,7 +30,8 @@ const diagonalSquares = (location: Location): IDiagonalSquares => {
 const indicatorLocations = (
   pieceLocationProp: Location | null,
   postions: IBoardPositions,
-  turn: "red" | "blue"
+  turn: "red" | "blue",
+  first: boolean
 ): IndicatorInfo[] => {
   if (pieceLocationProp === null) return [];
 
@@ -82,17 +83,25 @@ const indicatorLocations = (
       );
     });
   }
-  return locations.filter(
-    (info) =>
-      !(
-        postions["red"].filter((position) =>
-          arrayEqual(info.location, position)
-        ).length > 0 ||
-        postions["blue"].filter((position) =>
-          arrayEqual(info.location, position)
-        ).length > 0
-      )
-  );
+  return locations
+    .filter(
+      (info) =>
+        !(
+          postions["red"].filter((position) =>
+            arrayEqual(info.location, position)
+          ).length > 0 ||
+          postions["blue"].filter((position) =>
+            arrayEqual(info.location, position)
+          ).length > 0
+        )
+    )
+    .filter((info) =>
+      first
+        ? true
+        : (Math.sign(info.location[0] - pieceLocationProp[0]) === -1
+            ? -1 * (info.location[0] - pieceLocationProp[0])
+            : info.location[0] - pieceLocationProp[0]) > 1
+    );
 };
 
 export default indicatorLocations;

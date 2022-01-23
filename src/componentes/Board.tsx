@@ -11,6 +11,7 @@ import indicatorLocations from "./utils/boardUtils";
 
 const Board = () => {
   const [turn, setTurn] = useState<"red" | "blue">("red");
+  const [turnCounter, setTurnCounter] = useState<number>(0);
   const [postions, setPosition] = useState<{
     red: Location[];
     blue: Location[];
@@ -20,10 +21,14 @@ const Board = () => {
   const currentIndicatorLocations = indicatorLocations(
     selectedPiece,
     postions,
-    turn
+    turn,
+    turnCounter === 0
   );
 
-  console.log(currentIndicatorLocations);
+  if (currentIndicatorLocations.length < 1 && turnCounter > 0) {
+    setTurn((turn) => (turn === "red" ? "blue" : "red"));
+    setTurnCounter(0);
+  }
 
   const takeTurn = (newLocation: Location) => {
     if (selectedPiece === null) return alert("please select a piece");
@@ -54,10 +59,19 @@ const Board = () => {
     const consecutiveDanger = indicatorLocations(
       newLocation,
       postions,
-      turn
+      turn,
+      turnCounter === 0
     ).filter((info) => info.endangers);
-    if (consecutiveDanger.length < 1) {
+    if (
+      consecutiveDanger.length < 1 ||
+      (Math.sign(newLocation[0] - selectedPiece[0]) === -1
+        ? -1 * (newLocation[0] - selectedPiece[0])
+        : newLocation[0] - selectedPiece[0]) < 2
+    ) {
+      setTurnCounter(0);
       setTurn((player) => (player === "red" ? "blue" : "red"));
+    } else {
+      setTurnCounter((counter) => counter + 1);
     }
     setSelectedPiece(newLocation);
   };
