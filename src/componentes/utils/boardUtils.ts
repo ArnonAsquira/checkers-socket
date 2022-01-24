@@ -98,4 +98,15 @@ const indicatorLocations = (
     .filter((info) => (first ? true : info.endangers !== null));
 };
 
-export default indicatorLocations;
+const calculateNewQueenLocation = (
+  postions: IBoardPositions,
+  turn: "red" | "blue"
+): Location | null => {
+  const endOfBoardPlayer = postions[turn].filter((location) =>
+    turn === "red" ? location[0] === 7 : location[0] === 0
+  )[0];
+  if (!endOfBoardPlayer) return null;
+  return endOfBoardPlayer;
+};
+
+export { indicatorLocations, calculateNewQueenLocation };

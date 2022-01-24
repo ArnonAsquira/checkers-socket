@@ -1,22 +1,28 @@
 import BoardSqaure from "./BoardSquare";
-import { IndicatorInfo, Location } from "../types/boardTypes";
-import { useState } from "react";
+import { IndicatorInfo, Location, IBoardPositions } from "../types/boardTypes";
+import { useEffect, useState } from "react";
 import arrayEqual from "./utils/arrayEqual";
 import {
   initailPlayersLocations,
   amountOfRows,
   quardinatnts,
 } from "./utils/boardBuild";
-import indicatorLocations from "./utils/boardUtils";
+import {
+  indicatorLocations,
+  calculateNewQueenLocation,
+} from "./utils/boardUtils";
 
 const Board = () => {
   const [turn, setTurn] = useState<"red" | "blue">("red");
   const [turnCounter, setTurnCounter] = useState<number>(0);
-  const [postions, setPosition] = useState<{
-    red: Location[];
-    blue: Location[];
-  }>(initailPlayersLocations);
+  const [postions, setPosition] = useState<IBoardPositions>(
+    initailPlayersLocations
+  );
   const [selectedPiece, setSelectedPiece] = useState<Location | null>(null);
+  const [queenPositions, setQueenPostions] = useState<IBoardPositions>({
+    red: [],
+    blue: [],
+  });
 
   const currentIndicatorLocations = indicatorLocations(
     selectedPiece,
@@ -37,10 +43,13 @@ const Board = () => {
         .length !== 1
     )
       return alert(`it's ${turn}'s turn`);
+
     const indicatorInfo: IndicatorInfo | undefined =
       currentIndicatorLocations.find((info) =>
         arrayEqual(info.location, newLocation)
       );
+
+    console.log(turn === "red" ? newLocation[0] === 7 : newLocation[0] === 0);
     const oppositeColor = turn === "red" ? "blue" : "red";
 
     setPosition((positions) => ({
