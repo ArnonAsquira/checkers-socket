@@ -117,6 +117,7 @@ const calcDangerIndicator = (
 const indicatorLocations = (
   pieceLocationProp: Location | null,
   postions: IBoardPositions,
+  queenPositions: IBoardPositions,
   turn: "red" | "blue",
   first: boolean,
   isQueen: boolean
@@ -134,6 +135,12 @@ const indicatorLocations = (
     locations.map((info) => info.location),
     postions,
     turn
+  ).concat(
+    threatendPieces(
+      locations.map((info) => info.location),
+      queenPositions,
+      turn
+    )
   );
 
   if (threatLocations.length > 0) {

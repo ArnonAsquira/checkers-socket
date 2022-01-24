@@ -26,6 +26,7 @@ const Board = () => {
   const currentIndicatorLocations = indicatorLocations(
     selectedPiece,
     postions,
+    queenPositions,
     turn,
     turnCounter === 0,
     selectedPiece === null
@@ -82,14 +83,23 @@ const Board = () => {
           : postions[oppositeColor],
     }));
 
-    if (isQueen) {
-      setQueenPostions((positions) => ({
-        ...positions,
-        [turn]: positions[turn]
-          .filter((location) => !arrayEqual(location, selectedPiece))
-          .concat([newLocation]),
-      }));
-    }
+    // if (isQueen) {
+    setQueenPostions((positions) => ({
+      ...positions,
+      [oppositeColor]:
+        indicatorInfo && indicatorInfo.endangers !== null
+          ? positions[oppositeColor].filter(
+              (playerLocation) =>
+                !arrayEqual(indicatorInfo.endangers as Location, playerLocation)
+            )
+          : positions[oppositeColor],
+      [turn]: isQueen
+        ? positions[turn]
+            .filter((location) => !arrayEqual(location, selectedPiece))
+            .concat([newLocation])
+        : positions[turn],
+    }));
+    // }
 
     if (reachedEndOfBoard && !isQueen) {
       setQueenPostions((positions) => ({
@@ -102,6 +112,7 @@ const Board = () => {
     const consecutiveDanger = indicatorLocations(
       newLocation,
       postions,
+      queenPositions,
       turn,
       turnCounter === 0,
       arrayIncludes(newLocation, queenPositions[turn])
