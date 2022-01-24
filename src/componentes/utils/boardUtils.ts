@@ -4,17 +4,15 @@ import {
   IndicatorInfo,
   IBoardPositions,
 } from "../../types/boardTypes";
-import arrayEqual from "./arrayEqual";
+import arrayEqual, { arrayIncludes } from "./arrayEqual";
 
 const threatendPieces = (
-  indicatorLocationsProp: [Location, Location],
+  indicatorLocationsProp: Location[],
   postions: IBoardPositions,
   turn: "red" | "blue"
 ): Location[] => {
-  return postions[turn === "red" ? "blue" : "red"].filter(
-    (position) =>
-      arrayEqual(position, indicatorLocationsProp[0]) ||
-      arrayEqual(position, indicatorLocationsProp[1])
+  return postions[turn === "red" ? "blue" : "red"].filter((position) =>
+    arrayIncludes(position, indicatorLocationsProp)
   );
 };
 
@@ -27,54 +25,123 @@ const diagonalSquares = (location: Location): IDiagonalSquares => {
   };
 };
 
-const indicatorLocations = (
-  pieceLocationProp: Location | null,
+const imiddeateMoves = (
   postions: IBoardPositions,
-  turn: "red" | "blue",
-  first: boolean
-): IndicatorInfo[] => {
-  if (pieceLocationProp === null) return [];
-
+  pieceLocation: Location
+): [IndicatorInfo, IndicatorInfo] => {
   const locations: [IndicatorInfo, IndicatorInfo] =
-    postions["red"].filter((position) =>
-      arrayEqual(position, pieceLocationProp)
-    ).length !== 1
+    postions["red"].filter((position) => arrayEqual(position, pieceLocation))
+      .length !== 1
       ? [
           {
-            location: diagonalSquares(pieceLocationProp).leftUp,
+            location: diagonalSquares(pieceLocation).leftUp,
             endangers: null,
           },
           {
-            location: diagonalSquares(pieceLocationProp).rightUp,
+            location: diagonalSquares(pieceLocation).rightUp,
             endangers: null,
           },
         ]
       : [
           {
-            location: diagonalSquares(pieceLocationProp).leftDown,
+            location: diagonalSquares(pieceLocation).leftDown,
             endangers: null,
           },
           {
-            location: diagonalSquares(pieceLocationProp).rightDown,
+            location: diagonalSquares(pieceLocation).rightDown,
             endangers: null,
           },
         ];
+  return locations;
+};
+
+const calcDiaginal = (
+  location: Location,
+  right: boolean,
+  up: boolean
+): Location[] => {
+  const digagonalLocationsArray: Location[] = [];
+  for (
+    let i = location;
+    up ? i[0] !== -1 : i[0] !== 8 && right ? i[1] !== 8 : i[1] !== -1;
+    i = [up ? i[0] - 1 : i[0] + 1, right ? i[1] + 1 : i[1] - 1]
+  ) {
+    if (!arrayEqual(i, location)) {
+      digagonalLocationsArray.push(i);
+    }
+  }
+  return digagonalLocationsArray;
+};
+
+const allDaigonalSqures = (location: Location): Location[] => {
+  const locationsArray: Location[] = [];
+  const optionsObject: {
+    upRight: Location[];
+    upLeft: Location[];
+    downRight: Location[];
+    downLeft: Location[];
+  } = {
+    upRight: calcDiaginal(location, true, true),
+    upLeft: calcDiaginal(location, false, true),
+    downRight: calcDiaginal(location, true, false),
+    downLeft: calcDiaginal(location, false, false),
+  };
+  for (const direction in optionsObject) {
+    locationsArray.push(
+      ...optionsObject[
+        direction as "upRight" | "upLeft" | "downRight" | "downLeft"
+      ]
+    );
+  }
+  return locationsArray;
+};
+
+const calcDangerIndicator = (
+  pieceLocation: Location,
+  threatenedPieceLocation: Location
+): Location => {
+  const direction: { up: boolean; right: boolean } = {
+    up: pieceLocation[0] - threatenedPieceLocation[0] > 0,
+    right: pieceLocation[1] - threatenedPieceLocation[1] < 0,
+  };
+  return [
+    direction.up
+      ? threatenedPieceLocation[0] - 1
+      : threatenedPieceLocation[0] + 1,
+    direction.right
+      ? threatenedPieceLocation[1] + 1
+      : threatenedPieceLocation[1] - 1,
+  ];
+};
+
+const indicatorLocations = (
+  pieceLocationProp: Location | null,
+  postions: IBoardPositions,
+  turn: "red" | "blue",
+  first: boolean,
+  isQueen: boolean
+): IndicatorInfo[] => {
+  if (pieceLocationProp === null) return [];
+
+  const locations: IndicatorInfo[] = isQueen
+    ? allDaigonalSqures(pieceLocationProp).map((location) => ({
+        location,
+        endangers: null,
+      }))
+    : imiddeateMoves(postions, pieceLocationProp);
 
   const threatLocations = threatendPieces(
-    [locations[0].location, locations[1].location],
+    locations.map((info) => info.location),
     postions,
     turn
   );
+
   if (threatLocations.length > 0) {
     threatLocations.forEach((pieceLocation) => {
-      const newLocation: Location =
-        turn === "red"
-          ? pieceLocationProp[1] - 1 === pieceLocation[1]
-            ? diagonalSquares(pieceLocation).leftDown
-            : diagonalSquares(pieceLocation).rightDown
-          : pieceLocationProp[1] - 1 === pieceLocation[1]
-          ? diagonalSquares(pieceLocation).leftUp
-          : diagonalSquares(pieceLocation).rightUp;
+      const newLocation: Location = calcDangerIndicator(
+        pieceLocationProp,
+        pieceLocation
+      );
 
       locations.splice(
         locations.findIndex((info) => arrayEqual(info.location, pieceLocation)),
@@ -97,16 +164,5 @@ const indicatorLocations = (
     )
     .filter((info) => (first ? true : info.endangers !== null));
 };
-
-// const calculateNewQueenLocation = (
-//   postions: IBoardPositions,
-//   turn: "red" | "blue"
-// ): Location | null => {
-//   const endOfBoardPlayer = postions[turn].filter((location) =>
-//     turn === "red" ? location[0] === 7 : location[0] === 0
-//   )[0];
-//   if (!endOfBoardPlayer) return null;
-//   return endOfBoardPlayer;
-// };
 
 export { indicatorLocations };

@@ -21,14 +21,17 @@ const Board = () => {
     blue: [],
   });
 
-  console.log(queenPositions);
-
   const currentIndicatorLocations = indicatorLocations(
     selectedPiece,
     postions,
     turn,
-    turnCounter === 0
+    turnCounter === 0,
+    selectedPiece === null
+      ? false
+      : arrayIncludes(selectedPiece, queenPositions[turn])
   );
+
+  console.log(currentIndicatorLocations);
 
   if (currentIndicatorLocations.length < 1 && turnCounter > 0) {
     setTurn((turn) => (turn === "red" ? "blue" : "red"));
@@ -37,6 +40,13 @@ const Board = () => {
 
   const takeTurn = (newLocation: Location) => {
     if (selectedPiece === null) return alert("please select a piece");
+    if (
+      queenPositions[turn].filter((position) =>
+        arrayEqual(position, selectedPiece)
+      ).length !== 0
+    ) {
+      return takeQueenTurn(newLocation);
+    }
     if (
       postions[turn].filter((position) => arrayEqual(position, selectedPiece))
         .length !== 1
@@ -77,7 +87,8 @@ const Board = () => {
       newLocation,
       postions,
       turn,
-      turnCounter === 0
+      turnCounter === 0,
+      arrayIncludes(newLocation, queenPositions[turn])
     ).filter((info) => info.endangers);
     if (
       consecutiveDanger.length < 1 ||
@@ -92,6 +103,10 @@ const Board = () => {
       setTurnCounter((counter) => counter + 1);
       setSelectedPiece(newLocation);
     }
+  };
+
+  const takeQueenTurn = (location: Location) => {
+    console.log(location);
   };
 
   const rows = [];
