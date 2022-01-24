@@ -21,6 +21,8 @@ const Board = () => {
     blue: [],
   });
 
+  const oppositeColor = turn === "red" ? "blue" : "red";
+
   const currentIndicatorLocations = indicatorLocations(
     selectedPiece,
     postions,
@@ -39,17 +41,19 @@ const Board = () => {
   }
 
   const takeTurn = (newLocation: Location) => {
+    let isQueen = false;
     if (selectedPiece === null) return alert("please select a piece");
     if (
       queenPositions[turn].filter((position) =>
         arrayEqual(position, selectedPiece)
       ).length !== 0
     ) {
-      return takeQueenTurn(newLocation);
+      isQueen = true;
     }
     if (
       postions[turn].filter((position) => arrayEqual(position, selectedPiece))
-        .length !== 1
+        .length !== 1 &&
+      !isQueen
     )
       return alert(`it's ${turn}'s turn`);
 
@@ -59,13 +63,16 @@ const Board = () => {
       );
     const reachedEndOfBoard =
       turn === "red" ? newLocation[0] === 7 : newLocation[0] === 0;
-    const oppositeColor = turn === "red" ? "blue" : "red";
 
     setPosition((positions) => ({
       ...positions,
-      [turn]: postions[turn]
-        .filter((playerLocation) => !arrayEqual(playerLocation, selectedPiece))
-        .concat(reachedEndOfBoard ? [] : [newLocation]),
+      [turn]: isQueen
+        ? positions[turn]
+        : postions[turn]
+            .filter(
+              (playerLocation) => !arrayEqual(playerLocation, selectedPiece)
+            )
+            .concat(reachedEndOfBoard ? [] : [newLocation]),
       [oppositeColor]:
         indicatorInfo && indicatorInfo.endangers !== null
           ? postions[oppositeColor].filter(
@@ -75,7 +82,16 @@ const Board = () => {
           : postions[oppositeColor],
     }));
 
-    if (reachedEndOfBoard) {
+    if (isQueen) {
+      setQueenPostions((positions) => ({
+        ...positions,
+        [turn]: positions[turn]
+          .filter((location) => !arrayEqual(location, selectedPiece))
+          .concat([newLocation]),
+      }));
+    }
+
+    if (reachedEndOfBoard && !isQueen) {
       setQueenPostions((positions) => ({
         ...positions,
         [turn]: positions[turn].concat([newLocation]),
@@ -103,10 +119,6 @@ const Board = () => {
       setTurnCounter((counter) => counter + 1);
       setSelectedPiece(newLocation);
     }
-  };
-
-  const takeQueenTurn = (location: Location) => {
-    console.log(location);
   };
 
   const rows = [];
