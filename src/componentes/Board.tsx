@@ -1,16 +1,13 @@
 import BoardSqaure from "./BoardSquare";
 import { IndicatorInfo, Location, IBoardPositions } from "../types/boardTypes";
-import { useEffect, useState } from "react";
-import arrayEqual from "./utils/arrayEqual";
+import { useState } from "react";
+import arrayEqual, { arrayIncludes } from "./utils/arrayEqual";
 import {
   initailPlayersLocations,
   amountOfRows,
   quardinatnts,
 } from "./utils/boardBuild";
-import {
-  indicatorLocations,
-  calculateNewQueenLocation,
-} from "./utils/boardUtils";
+import { indicatorLocations } from "./utils/boardUtils";
 
 const Board = () => {
   const [turn, setTurn] = useState<"red" | "blue">("red");
@@ -23,6 +20,8 @@ const Board = () => {
     red: [],
     blue: [],
   });
+
+  console.log(queenPositions);
 
   const currentIndicatorLocations = indicatorLocations(
     selectedPiece,
@@ -48,15 +47,15 @@ const Board = () => {
       currentIndicatorLocations.find((info) =>
         arrayEqual(info.location, newLocation)
       );
-
-    console.log(turn === "red" ? newLocation[0] === 7 : newLocation[0] === 0);
+    const reachedEndOfBoard =
+      turn === "red" ? newLocation[0] === 7 : newLocation[0] === 0;
     const oppositeColor = turn === "red" ? "blue" : "red";
 
     setPosition((positions) => ({
       ...positions,
       [turn]: postions[turn]
         .filter((playerLocation) => !arrayEqual(playerLocation, selectedPiece))
-        .concat([newLocation]),
+        .concat(reachedEndOfBoard ? [] : [newLocation]),
       [oppositeColor]:
         indicatorInfo && indicatorInfo.endangers !== null
           ? postions[oppositeColor].filter(
@@ -65,6 +64,15 @@ const Board = () => {
             )
           : postions[oppositeColor],
     }));
+
+    if (reachedEndOfBoard) {
+      setQueenPostions((positions) => ({
+        ...positions,
+        [turn]: positions[turn].concat([newLocation]),
+      }));
+    }
+
+    // checking for another possible consecutive turn
     const consecutiveDanger = indicatorLocations(
       newLocation,
       postions,
@@ -90,32 +98,40 @@ const Board = () => {
   for (let i = 0; i < quardinatnts.length; i += amountOfRows) {
     rows.push(
       <div>
-        {quardinatnts.slice(i, i + amountOfRows).map((location) => (
-          <BoardSqaure
-            location={location}
-            color={(location[0] + location[1]) % 2 === 0 ? "light" : "dark"}
-            player={
-              postions.red.includes(location)
-                ? "red"
-                : postions.blue.includes(location)
-                ? "blue"
-                : currentIndicatorLocations
-                    .map((indicatorLocation) =>
-                      arrayEqual(indicatorLocation.location, location)
-                    )
-                    .includes(true)
-                ? "indicator"
-                : undefined
-            }
-            setSelectedPiece={setSelectedPiece}
-            isSelectedPiece={
-              selectedPiece === null
-                ? false
-                : arrayEqual(selectedPiece, location)
-            }
-            takeTurn={takeTurn}
-          />
-        ))}
+        {quardinatnts.slice(i, i + amountOfRows).map((location) => {
+          return (
+            <BoardSqaure
+              location={location}
+              color={(location[0] + location[1]) % 2 === 0 ? "light" : "dark"}
+              player={
+                postions.red.includes(location) ||
+                arrayIncludes(location, queenPositions.red)
+                  ? "red"
+                  : postions.blue.includes(location) ||
+                    arrayIncludes(location, queenPositions.blue)
+                  ? "blue"
+                  : currentIndicatorLocations
+                      .map((indicatorLocation) =>
+                        arrayEqual(indicatorLocation.location, location)
+                      )
+                      .includes(true)
+                  ? "indicator"
+                  : undefined
+              }
+              setSelectedPiece={setSelectedPiece}
+              isSelectedPiece={
+                selectedPiece === null
+                  ? false
+                  : arrayEqual(selectedPiece, location)
+              }
+              takeTurn={takeTurn}
+              isQueen={
+                arrayIncludes(location, queenPositions.red) ||
+                arrayIncludes(location, queenPositions.blue)
+              }
+            />
+          );
+        })}
       </div>
     );
   }

@@ -10,6 +10,7 @@ interface BoardSqaureProps {
   setSelectedPiece: Dispatch<React.SetStateAction<Location | null>>;
   isSelectedPiece: boolean;
   takeTurn: (newLocation: Location) => void;
+  isQueen: boolean;
 }
 
 const BoardSqaure = ({
@@ -19,6 +20,7 @@ const BoardSqaure = ({
   setSelectedPiece,
   isSelectedPiece,
   takeTurn,
+  isQueen,
 }: BoardSqaureProps) => {
   const handlePieceClick = (location: Location, player: "red" | "blue") => {
     setSelectedPiece(location);
@@ -35,7 +37,8 @@ const BoardSqaure = ({
             position={location}
             owner={player}
             isSelectedPiece={isSelectedPiece}
-            handlePieceClick={handlePieceClick}
+            handlePieceClick={isQueen ? handlePieceClick : handlePieceClick}
+            isQueen={isQueen}
           />
         )
       ) : null}
