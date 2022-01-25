@@ -1,3 +1,4 @@
+import { info } from "console";
 import {
   Location,
   IDiagonalSquares,
@@ -63,7 +64,7 @@ const calcDiaginal = (
   const digagonalLocationsArray: Location[] = [];
   for (
     let i = location;
-    up ? i[0] !== -1 : i[0] !== 8 && right ? i[1] !== 8 : i[1] !== -1;
+    up ? i[0] !== 0 : i[0] !== 7 && right ? i[1] !== 7 : i[1] !== 0;
     i = [up ? i[0] - 1 : i[0] + 1, right ? i[1] + 1 : i[1] - 1]
   ) {
     if (!arrayEqual(i, location)) {
@@ -157,16 +158,15 @@ const indicatorLocations = (
       );
     });
   }
+
   return locations
     .filter(
       (info) =>
         !(
-          postions["red"].filter((position) =>
-            arrayEqual(info.location, position)
-          ).length > 0 ||
-          postions["blue"].filter((position) =>
-            arrayEqual(info.location, position)
-          ).length > 0
+          arrayIncludes(info.location, postions["red"]) ||
+          arrayIncludes(info.location, postions["blue"]) ||
+          arrayIncludes(info.location, queenPositions["red"]) ||
+          arrayIncludes(info.location, queenPositions["blue"])
         )
     )
     .filter((info) => (first ? true : info.endangers !== null));

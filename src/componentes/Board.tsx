@@ -83,7 +83,6 @@ const Board = () => {
           : postions[oppositeColor],
     }));
 
-    // if (isQueen) {
     setQueenPostions((positions) => ({
       ...positions,
       [oppositeColor]:
@@ -99,7 +98,6 @@ const Board = () => {
             .concat([newLocation])
         : positions[turn],
     }));
-    // }
 
     if (reachedEndOfBoard && !isQueen) {
       setQueenPostions((positions) => ({
@@ -115,13 +113,11 @@ const Board = () => {
       queenPositions,
       turn,
       turnCounter === 0,
-      arrayIncludes(newLocation, queenPositions[turn])
+      isQueen
     ).filter((info) => info.endangers);
     if (
       consecutiveDanger.length < 1 ||
-      (Math.sign(newLocation[0] - selectedPiece[0]) === -1
-        ? -1 * (newLocation[0] - selectedPiece[0])
-        : newLocation[0] - selectedPiece[0]) < 2
+      !(indicatorInfo && indicatorInfo.endangers)
     ) {
       setTurnCounter(0);
       setTurn((player) => (player === "red" ? "blue" : "red"));
