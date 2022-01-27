@@ -12,9 +12,23 @@ interface IDiagonalSquares {
   leftUp: Location;
 }
 
-interface IBoardPositions {
-  red: Location[];
-  blue: Location[];
+type IDiagonalSquaresKey = "rightDown" | "rightUp" | "leftDown" | "leftUp";
+
+interface IPieceInfoObject {
+  location: Location;
+  isQueen: boolean;
 }
 
-export type { Location, IndicatorInfo, IDiagonalSquares, IBoardPositions };
+interface IBoardPositions {
+  red: IPieceInfoObject[];
+  blue: IPieceInfoObject[];
+}
+
+export type {
+  Location,
+  IndicatorInfo,
+  IDiagonalSquares,
+  IBoardPositions,
+  IPieceInfoObject,
+  IDiagonalSquaresKey,
+};

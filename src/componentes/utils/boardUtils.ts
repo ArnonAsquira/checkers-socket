@@ -3,17 +3,22 @@ import {
   IDiagonalSquares,
   IndicatorInfo,
   IBoardPositions,
+  IPieceInfoObject,
 } from "../../types/boardTypes";
 import arrayEqual, { arrayIncludes } from "./arrayEqual";
 
-const threatendPieces = (
+const oppositeColor = (color: "red" | "blue"): "red" | "blue" => {
+  return color === "red" ? "blue" : "red";
+};
+
+const overLappingLocations = (
   indicatorLocationsProp: Location[],
-  postions: IBoardPositions,
-  turn: "red" | "blue"
+  rivalLocations: IPieceInfoObject[]
 ): Location[] => {
-  return postions[turn === "red" ? "blue" : "red"].filter((position) =>
-    arrayIncludes(position, indicatorLocationsProp)
+  const threatenedPositionsInfo = rivalLocations.filter((postionsInfo) =>
+    arrayIncludes(postionsInfo.location, indicatorLocationsProp)
   );
+  return threatenedPositionsInfo.map((pieceInfo) => pieceInfo.location);
 };
 
 const diagonalSquares = (location: Location): IDiagonalSquares => {
@@ -26,74 +31,30 @@ const diagonalSquares = (location: Location): IDiagonalSquares => {
 };
 
 const imiddeateMoves = (
-  postions: IBoardPositions,
-  pieceLocation: Location
-): [IndicatorInfo, IndicatorInfo] => {
-  const locations: [IndicatorInfo, IndicatorInfo] =
-    postions["red"].filter((position) => arrayEqual(position, pieceLocation))
-      .length !== 1
-      ? [
-          {
-            location: diagonalSquares(pieceLocation).leftUp,
-            endangers: null,
-          },
-          {
-            location: diagonalSquares(pieceLocation).rightUp,
-            endangers: null,
-          },
-        ]
-      : [
-          {
-            location: diagonalSquares(pieceLocation).leftDown,
-            endangers: null,
-          },
-          {
-            location: diagonalSquares(pieceLocation).rightDown,
-            endangers: null,
-          },
-        ];
-  return locations;
-};
-
-const calcDiaginal = (
-  location: Location,
-  right: boolean,
-  up: boolean
+  pieceInfo: IPieceInfoObject,
+  turn: "red" | "blue"
 ): Location[] => {
-  const digagonalLocationsArray: Location[] = [];
-  for (
-    let i = location;
-    up ? i[0] !== -1 : i[0] !== 8 && right ? i[1] !== 8 : i[1] !== -1;
-    i = [up ? i[0] - 1 : i[0] + 1, right ? i[1] + 1 : i[1] - 1]
-  ) {
-    if (!arrayEqual(i, location)) {
-      digagonalLocationsArray.push(i);
-    }
-  }
-  return digagonalLocationsArray;
-};
-
-const allDaigonalSqures = (location: Location): Location[] => {
-  const locationsArray: Location[] = [];
-  const optionsObject: {
-    upRight: Location[];
-    upLeft: Location[];
-    downRight: Location[];
-    downLeft: Location[];
-  } = {
-    upRight: calcDiaginal(location, true, true),
-    upLeft: calcDiaginal(location, false, true),
-    downRight: calcDiaginal(location, true, false),
-    downLeft: calcDiaginal(location, false, false),
+  let locationsObj = {
+    leftUp:
+      turn === "red" && !pieceInfo.isQueen
+        ? null
+        : diagonalSquares(pieceInfo.location).leftUp,
+    leftDown:
+      turn === "blue" && pieceInfo.isQueen
+        ? null
+        : diagonalSquares(pieceInfo.location).leftDown,
+    rightUp:
+      turn === "red" && !pieceInfo.isQueen
+        ? null
+        : diagonalSquares(pieceInfo.location).rightUp,
+    rightDown:
+      turn === "blue" && !pieceInfo.isQueen
+        ? null
+        : diagonalSquares(pieceInfo.location).rightDown,
   };
-  for (const direction in optionsObject) {
-    locationsArray.push(
-      ...optionsObject[
-        direction as "upRight" | "upLeft" | "downRight" | "downLeft"
-      ]
-    );
-  }
-  return locationsArray;
+  return Object.values(locationsObj).filter(
+    (location) => location !== null
+  ) as Location[];
 };
 
 const calcDangerIndicator = (
@@ -115,68 +76,66 @@ const calcDangerIndicator = (
 };
 
 const indicatorLocations = (
-  pieceLocationProp: Location | null,
+  pieceInfo: IPieceInfoObject | null,
   postions: IBoardPositions,
-  queenPositions: IBoardPositions,
   turn: "red" | "blue",
-  first: boolean,
-  isQueen: boolean
+  first: boolean
 ): IndicatorInfo[] => {
-  if (pieceLocationProp === null) return [];
+  if (pieceInfo === null) return [];
 
-  let locations: IndicatorInfo[] = isQueen
-    ? allDaigonalSqures(pieceLocationProp).map((location) => ({
-        location,
-        endangers: null,
-      }))
-    : imiddeateMoves(postions, pieceLocationProp);
+  // diagonal squares of the selectedPiece
+  const immideateLocations: Location[] = imiddeateMoves(pieceInfo, turn);
 
-  const threatLocations = threatendPieces(
-    locations.map((info) => info.location),
-    postions,
-    turn
-  ).concat(
-    threatendPieces(
-      locations.map((info) => info.location),
-      queenPositions,
-      turn
-    )
+  console.log(immideateLocations);
+
+  const threatLocations = overLappingLocations(
+    immideateLocations,
+    postions[oppositeColor(turn)]
+  );
+
+  const indicatorLocations: IndicatorInfo[] = immideateLocations.map(
+    (location) => ({ location, endangers: null })
   );
 
   if (threatLocations.length > 0) {
     threatLocations.forEach((pieceLocation) => {
       const newLocation: Location = calcDangerIndicator(
-        pieceLocationProp,
+        pieceInfo.location,
         pieceLocation
       );
-
-      locations.splice(
-        locations.findIndex((info) => arrayEqual(info.location, pieceLocation)),
-        1,
-        { location: newLocation, endangers: pieceLocation }
+      const indicatorIndex = indicatorLocations.findIndex((info) =>
+        arrayEqual(info.location, pieceLocation)
       );
+      indicatorLocations[indicatorIndex] = {
+        location: newLocation,
+        endangers: pieceLocation,
+      };
     });
   }
 
-  locations = locations
+  const filteredIndicatoes: IndicatorInfo[] = indicatorLocations
     .filter(
       (info) =>
         !(
-          arrayIncludes(info.location, postions["red"]) ||
-          arrayIncludes(info.location, postions["blue"]) ||
-          arrayIncludes(info.location, queenPositions["red"]) ||
-          arrayIncludes(info.location, queenPositions["blue"])
+          arrayIncludes(
+            info.location,
+            postions["red"].map((info) => info.location)
+          ) ||
+          arrayIncludes(
+            info.location,
+            postions["blue"].map((info) => info.location)
+          )
         )
     )
     .filter((info) => (first ? true : info.endangers !== null));
 
-  const threatningIndicators = locations.filter(
+  const threatningIndicators = filteredIndicatoes.filter(
     (info) => info.endangers !== null
   );
   if (threatningIndicators.length > 0) {
     return threatningIndicators;
   }
-  return locations;
+  return filteredIndicatoes;
 };
 
 export { indicatorLocations };
