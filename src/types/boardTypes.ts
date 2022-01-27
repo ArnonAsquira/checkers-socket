@@ -24,6 +24,12 @@ interface IBoardPositions {
   blue: IPieceInfoObject[];
 }
 
+interface ITurn {
+  color: "red" | "blue";
+  from: IPieceInfoObject;
+  to: IPieceInfoObject;
+}
+
 export type {
   Location,
   IndicatorInfo,
@@ -31,4 +37,5 @@ export type {
   IBoardPositions,
   IPieceInfoObject,
   IDiagonalSquaresKey,
+  ITurn,
 };

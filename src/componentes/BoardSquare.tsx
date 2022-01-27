@@ -7,7 +7,9 @@ interface BoardSqaureProps {
   location: Location;
   color: "light" | "dark";
   player: "red" | "blue" | "indicator" | undefined;
-  setSelectedPiece: Dispatch<React.SetStateAction<IPieceInfoObject | null>>;
+  setSelectedPiece: Dispatch<
+    React.SetStateAction<IPieceInfoObject | null>
+  > | null;
   isSelectedPiece: boolean;
   takeTurn: (newLocation: Location) => void;
   isQueen: boolean;
@@ -23,6 +25,7 @@ const BoardSqaure = ({
   isQueen,
 }: BoardSqaureProps) => {
   const handlePieceClick = (location: Location, player: "red" | "blue") => {
+    if (setSelectedPiece === null) return;
     setSelectedPiece({ location, isQueen: isQueen });
   };
 

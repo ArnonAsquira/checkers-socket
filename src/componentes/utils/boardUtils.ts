@@ -40,7 +40,7 @@ const imiddeateMoves = (
         ? null
         : diagonalSquares(pieceInfo.location).leftUp,
     leftDown:
-      turn === "blue" && pieceInfo.isQueen
+      turn === "blue" && !pieceInfo.isQueen
         ? null
         : diagonalSquares(pieceInfo.location).leftDown,
     rightUp:
@@ -86,8 +86,6 @@ const indicatorLocations = (
   // diagonal squares of the selectedPiece
   const immideateLocations: Location[] = imiddeateMoves(pieceInfo, turn);
 
-  console.log(immideateLocations);
-
   const threatLocations = overLappingLocations(
     immideateLocations,
     postions[oppositeColor(turn)]
@@ -103,6 +101,13 @@ const indicatorLocations = (
         pieceInfo.location,
         pieceLocation
       );
+      if (
+        newLocation[0] < 0 ||
+        newLocation[0] > 7 ||
+        newLocation[1] < 0 ||
+        newLocation[1] > 7
+      )
+        return;
       const indicatorIndex = indicatorLocations.findIndex((info) =>
         arrayEqual(info.location, pieceLocation)
       );
@@ -138,4 +143,4 @@ const indicatorLocations = (
   return filteredIndicatoes;
 };
 
-export { indicatorLocations };
+export { indicatorLocations, oppositeColor, diagonalSquares };

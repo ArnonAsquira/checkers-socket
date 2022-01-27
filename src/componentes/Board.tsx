@@ -4,15 +4,17 @@ import {
   Location,
   IBoardPositions,
   IPieceInfoObject,
+  ITurn,
 } from "../types/boardTypes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import arrayEqual, { arrayIncludes } from "./utils/arrayEqual";
 import {
   initailPlayersLocations,
   amountOfRows,
   quardinatnts,
 } from "./utils/boardBuild";
-import { indicatorLocations } from "./utils/boardUtils";
+import { indicatorLocations, oppositeColor } from "./utils/boardUtils";
+import getMandatoryMoves from "./utils/mandatoryMoves";
 
 const Board = () => {
   const [turn, setTurn] = useState<"red" | "blue">("red");
@@ -30,22 +32,33 @@ const Board = () => {
   const [selectedPiece, setSelectedPiece] = useState<IPieceInfoObject | null>(
     null
   );
+  const [lastTurn, setLastTurn] = useState<ITurn>({
+    color: "red",
+    from: { location: [-1, -1], isQueen: false },
+    to: { location: [-1, -1], isQueen: false },
+  });
+  const [mandatoryMoves, setMandatoryMoves] = useState<IndicatorInfo[]>([]);
 
-  const oppositeColor = turn === "red" ? "blue" : "red";
+  const currentIndicatorLocations =
+    mandatoryMoves.length > 0
+      ? mandatoryMoves
+      : indicatorLocations(selectedPiece, postions, turn, turnCounter === 0);
 
-  const currentIndicatorLocations = indicatorLocations(
-    selectedPiece,
-    postions,
-    turn,
-    turnCounter === 0
-  );
+  console.log(mandatoryMoves);
 
-  console.log(currentIndicatorLocations);
+  // if (currentIndicatorLocations.length < 1 && turnCounter > 0) {
+  //   setTurn((turn) => (turn === "red" ? "blue" : "red"));
+  //   setTurnCounter(0);
+  // }
 
-  if (currentIndicatorLocations.length < 1 && turnCounter > 0) {
-    setTurn((turn) => (turn === "red" ? "blue" : "red"));
-    setTurnCounter(0);
-  }
+  useEffect(() => {
+    if (mandatoryMoves.length > 0) return;
+    const newMandatoryMoves = getMandatoryMoves(postions, lastTurn, turn);
+    console.log(newMandatoryMoves);
+    if (newMandatoryMoves !== null) {
+      setMandatoryMoves(newMandatoryMoves);
+    }
+  }, [turn]);
 
   const takeTurn = (newLocation: Location) => {
     if (selectedPiece === null) return alert("please select a piece");
@@ -78,16 +91,16 @@ const Board = () => {
             ? [{ location: newLocation, isQueen: true }]
             : [{ location: newLocation, isQueen: selectedPiece.isQueen }]
         ),
-      [oppositeColor]:
+      [oppositeColor(turn)]:
         indicatorInfo && indicatorInfo.endangers !== null
-          ? postions[oppositeColor].filter(
+          ? postions[oppositeColor(turn)].filter(
               (playerInfo) =>
                 !arrayEqual(
                   indicatorInfo.endangers as Location,
                   playerInfo.location
                 )
             )
-          : postions[oppositeColor],
+          : postions[oppositeColor(turn)],
     }));
 
     // checking for another possible consecutive turn
@@ -107,13 +120,23 @@ const Board = () => {
       setTurnCounter(0);
       setTurn((player) => (player === "red" ? "blue" : "red"));
       setSelectedPiece(null);
+      setMandatoryMoves([]);
     } else {
       setTurnCounter((counter) => counter + 1);
       setSelectedPiece({
         location: newLocation,
         isQueen: selectedPiece.isQueen || reachedEndOfBoard,
       });
+      setMandatoryMoves(consecutiveDanger);
     }
+    setLastTurn({
+      color: turn,
+      from: selectedPiece,
+      to: {
+        location: newLocation,
+        isQueen: selectedPiece.isQueen || reachedEndOfBoard,
+      },
+    });
   };
 
   const rows = [];
@@ -144,7 +167,7 @@ const Board = () => {
                   ? "indicator"
                   : undefined
               }
-              setSelectedPiece={setSelectedPiece}
+              setSelectedPiece={turnCounter === 0 ? setSelectedPiece : null}
               isSelectedPiece={
                 selectedPiece === null
                   ? false
