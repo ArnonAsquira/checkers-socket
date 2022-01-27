@@ -63,7 +63,7 @@ const calcDiaginal = (
   const digagonalLocationsArray: Location[] = [];
   for (
     let i = location;
-    up ? i[0] !== 0 : i[0] !== 7 && right ? i[1] !== 7 : i[1] !== 0;
+    up ? i[0] !== -1 : i[0] !== 8 && right ? i[1] !== 8 : i[1] !== -1;
     i = [up ? i[0] - 1 : i[0] + 1, right ? i[1] + 1 : i[1] - 1]
   ) {
     if (!arrayEqual(i, location)) {
@@ -124,7 +124,7 @@ const indicatorLocations = (
 ): IndicatorInfo[] => {
   if (pieceLocationProp === null) return [];
 
-  const locations: IndicatorInfo[] = isQueen
+  let locations: IndicatorInfo[] = isQueen
     ? allDaigonalSqures(pieceLocationProp).map((location) => ({
         location,
         endangers: null,
@@ -158,7 +158,7 @@ const indicatorLocations = (
     });
   }
 
-  return locations
+  locations = locations
     .filter(
       (info) =>
         !(
@@ -169,6 +169,14 @@ const indicatorLocations = (
         )
     )
     .filter((info) => (first ? true : info.endangers !== null));
+
+  const threatningIndicators = locations.filter(
+    (info) => info.endangers !== null
+  );
+  if (threatningIndicators.length > 0) {
+    return threatningIndicators;
+  }
+  return locations;
 };
 
 export { indicatorLocations };
