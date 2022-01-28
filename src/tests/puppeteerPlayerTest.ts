@@ -127,7 +127,7 @@ const movesArray: Location[] = [
 ];
 
 const testPlaying = async (movesArray: Location[]) => {
-  const browser = await puppeteer.launch({ headless: false, slowMo: 5 });
+  const browser = await puppeteer.launch({ headless: false, slowMo: 15 });
   const page = await browser.newPage();
   await page.goto(baseUrl);
   for (const location of movesArray) {
