@@ -140,7 +140,15 @@ const indicatorLocations = (
   if (threatningIndicators.length > 0) {
     return threatningIndicators;
   }
-  return filteredIndicatoes;
+  return filteredIndicatoes.filter(
+    (info) =>
+      !(
+        info.location[0] < 0 ||
+        info.location[0] > 7 ||
+        info.location[1] < 0 ||
+        info.location[1] > 7
+      )
+  );
 };
 
 export { indicatorLocations, oppositeColor, diagonalSquares };

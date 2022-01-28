@@ -14,7 +14,7 @@ import {
   quardinatnts,
 } from "./utils/boardBuild";
 import { indicatorLocations, oppositeColor } from "./utils/boardUtils";
-import getMandatoryMoves from "./utils/mandatoryMoves";
+import { adjacentPieces } from "./utils/mandatoryMoves";
 
 const Board = () => {
   const [turn, setTurn] = useState<"red" | "blue">("red");
@@ -38,27 +38,28 @@ const Board = () => {
     to: { location: [-1, -1], isQueen: false },
   });
   const [mandatoryMoves, setMandatoryMoves] = useState<IndicatorInfo[]>([]);
+  const [movesPlayed, setMovesPlayed] = useState<Location[]>([]);
 
   const currentIndicatorLocations =
     mandatoryMoves.length > 0
       ? mandatoryMoves
       : indicatorLocations(selectedPiece, postions, turn, turnCounter === 0);
 
-  console.log(mandatoryMoves);
-
-  // if (currentIndicatorLocations.length < 1 && turnCounter > 0) {
-  //   setTurn((turn) => (turn === "red" ? "blue" : "red"));
-  //   setTurnCounter(0);
-  // }
-
   useEffect(() => {
     if (mandatoryMoves.length > 0) return;
-    const newMandatoryMoves = getMandatoryMoves(postions, lastTurn, turn);
-    console.log(newMandatoryMoves);
+    // const newMandatoryMoves = getMandatoryMoves(postions, lastTurn, turn);
+    const newMandatoryMoves = adjacentPieces(postions, turn);
     if (newMandatoryMoves !== null) {
       setMandatoryMoves(newMandatoryMoves);
     }
   }, [turn]);
+
+  useEffect(() => {
+    setMovesPlayed((moves) =>
+      moves.concat([lastTurn.from.location]).concat([lastTurn.to.location])
+    );
+    console.log(movesPlayed);
+  }, [lastTurn]);
 
   const takeTurn = (newLocation: Location) => {
     if (selectedPiece === null) return alert("please select a piece");
