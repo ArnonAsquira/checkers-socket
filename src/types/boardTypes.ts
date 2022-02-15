@@ -30,6 +30,8 @@ interface ITurn {
   to: IPieceInfoObject;
 }
 
+type PlatyerColors = "red" | "blue";
+
 export type {
   Location,
   IndicatorInfo,
@@ -38,4 +40,5 @@ export type {
   IPieceInfoObject,
   IDiagonalSquaresKey,
   ITurn,
+  PlatyerColors,
 };

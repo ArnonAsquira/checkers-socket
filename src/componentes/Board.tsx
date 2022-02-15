@@ -5,6 +5,7 @@ import {
   IBoardPositions,
   IPieceInfoObject,
   ITurn,
+  PlatyerColors,
 } from "../types/boardTypes";
 import { useEffect, useState } from "react";
 import arrayEqual, { arrayIncludes } from "./utils/arrayEqual";
@@ -15,9 +16,10 @@ import {
 } from "./utils/boardBuild";
 import { indicatorLocations, oppositeColor } from "./utils/boardUtils";
 import { adjacentPieces } from "./utils/mandatoryMoves";
+import { colorOne, colorTwo } from "../constants/board";
 
 const Board = () => {
-  const [turn, setTurn] = useState<"red" | "blue">("red");
+  const [turn, setTurn] = useState<PlatyerColors>(colorOne);
   const [turnCounter, setTurnCounter] = useState<number>(0);
   const [postions, setPosition] = useState<IBoardPositions>({
     red: initailPlayersLocations.red.map((location) => ({
@@ -47,7 +49,6 @@ const Board = () => {
 
   useEffect(() => {
     if (mandatoryMoves.length > 0) return;
-    // const newMandatoryMoves = getMandatoryMoves(postions, lastTurn, turn);
     const newMandatoryMoves = adjacentPieces(postions, turn);
     if (newMandatoryMoves !== null) {
       setMandatoryMoves(newMandatoryMoves);
@@ -78,7 +79,7 @@ const Board = () => {
     if (indicatorInfo === undefined) return alert("something went wrong");
 
     const reachedEndOfBoard =
-      turn === "red" ? newLocation[0] === 7 : newLocation[0] === 0;
+      turn === colorOne ? newLocation[0] === 7 : newLocation[0] === 0;
 
     setPosition((positions) => ({
       ...positions,
@@ -198,7 +199,7 @@ const Board = () => {
 
   return (
     <div id="board">
-      {`${turn}'s turn`}
+      {/* {`${turn}'s turn`} */}
       {rows.map((row) => row)}
     </div>
   );
