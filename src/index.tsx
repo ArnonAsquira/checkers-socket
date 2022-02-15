@@ -1,9 +1,15 @@
 import { render } from "react-dom";
 import App from "./App";
 import "./css/main.css";
+import { BrowserRouter as Router } from "react-router-dom";
 
 const Main = () => {
   return <App />;
 };
 
-render(<Main />, document.getElementById("root"));
+render(
+  <Router>
+    <Main />
+  </Router>,
+  document.getElementById("root")
+);
