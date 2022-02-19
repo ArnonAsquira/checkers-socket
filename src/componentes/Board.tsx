@@ -197,12 +197,7 @@ const Board = () => {
     );
   }
 
-  return (
-    <div id="board">
-      {/* {`${turn}'s turn`} */}
-      {rows.map((row) => row)}
-    </div>
-  );
+  return <div id="board">{rows.map((row) => row)}</div>;
 };
 
 export default Board;

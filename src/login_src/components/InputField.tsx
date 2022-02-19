@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import TextInput from "./TextInput";
 import useForm from "./utils/useForm";
 import { loginUserIn } from "./utils/logUserIn";
@@ -7,6 +7,10 @@ import { baseUrl } from "../constants";
 import { LoginValues } from "../types/loginTypes";
 import { SignUpValues } from "../types/signUpTypes";
 import { useNavigate } from "react-router-dom";
+import { playMenuPath } from "../constants/appPaths";
+import { useStore } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
+import { setUserId } from "../../redux/slices/socketSlice";
 
 export default function InputField() {
   const initalLoginState: LoginValues = {
@@ -24,6 +28,7 @@ export default function InputField() {
   const [signUpInputValues, signHandleInputChange] =
     useForm(initialSignUpState);
 
+  const mainStore = useStore();
   const navigate = useNavigate();
 
   function switchForms(newState: boolean) {
@@ -38,7 +43,9 @@ export default function InputField() {
   }
 
   const handleGuestLoging = () => {
-    navigate("/game");
+    const userId = uuidv4();
+    mainStore.dispatch(setUserId(userId));
+    navigate(playMenuPath);
   };
 
   return (
