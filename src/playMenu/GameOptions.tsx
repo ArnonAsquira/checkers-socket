@@ -68,44 +68,61 @@ const GameOptions = () => {
   };
 
   const updateInitialGameData = (gameData: INewGameResponse) => {
+    console.log(gameData);
     mainStore.dispatch(joinedGame(true));
     mainStore.dispatch(setGamePositions(gameData.gameinfo.positions));
     mainStore.dispatch(
       setUsersColor(
-        gameData.playerOne === socketSlice.userId ? colorOne : colorTwo
+        gameData.playerOne?.id === socketSlice.userId ? colorOne : colorTwo
       )
     );
     mainStore.dispatch(
       setGamePlayers({
-        playerOne: gameData.playerOne,
-        playerTwo: gameData.playerTwo,
+        playerOne: gameData.playerOne && gameData.playerOne.userName,
+        playerTwo: gameData.playerTwo && gameData.playerTwo.userName,
       })
     );
     mainStore.dispatch(setTurn(colorOne));
   };
 
   return (
-    <div>
-      <button onClick={handleOnlineGameCreation}>generate game token</button>
-      <button onClick={goToOfflineGame}>play localy</button>
-      <label htmlFor="join-game">join game</label>
-      <input
-        type="text"
-        id="join-game"
-        placeholder="game token"
-        ref={tokenRef}
-      />
-      <button
-        onClick={() => {
-          if (tokenRef.current === null) {
-            return alert("please enter game token");
-          }
-          handleJoinGame(tokenRef.current.value);
-        }}
-      >
-        join
-      </button>
-      {gameToken ? <div>game token {gameToken}</div> : null}
+    <div className="game-options-menu">
+      <h1>game options</h1>
+      <div>
+        <button className="generate-token" onClick={handleOnlineGameCreation}>
+          generate game token
+        </button>
+        <button className="play-localy" onClick={goToOfflineGame}>
+          play localy
+        </button>
+      </div>
+      <div>
+        <label htmlFor="join-game">join game</label>
+        <input
+          type="text"
+          id="join-game"
+          placeholder="game token"
+          ref={tokenRef}
+        />
+        <button
+          className="join"
+          onClick={() => {
+            if (tokenRef.current === null) {
+              return alert("please enter game token");
+            }
+            handleJoinGame(tokenRef.current.value);
+          }}
+        >
+          join
+        </button>
+      </div>
+      <div>
+        {gameToken ? (
+          <div className="game-token">
+            game token <span>{gameToken}</span>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 };

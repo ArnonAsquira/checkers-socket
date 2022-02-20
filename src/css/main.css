@@ -1,11 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@200&display=swap");
 body {
   background: #f6e58d;
+  font-family: "Roboto Serif", sans-serif;
 }
 
 #board {
   margin: auto auto;
-  width: 80vw;
-  height: 95vh;
+  width: 60vw;
+  height: 80vh;
   border: 1px solid black;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -67,5 +69,223 @@ body {
   height: 100%;
   border-radius: 100%;
   cursor: pointer;
+}
+
+.input-field-container {
+  width: 80vw;
+  height: 80vh;
+  margin: 4.5% auto;
+  background-color: #535c68;
+  border-radius: 1%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.input-field-container h1 {
+  color: #dff9fb;
+  text-align: center;
+}
+
+.input-field-container form {
+  margin-top: 10%;
+  margin-bottom: 10%;
+  margin-left: auto;
+  margin-right: auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.input-field-container form label {
+  color: #dff9fb;
+  margin-right: 15%;
+}
+
+.input-field-container .login-buttons-div button {
+  background-color: #eccc68;
+  color: #57606f;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  border-radius: 2%;
+  border: none;
+  outline: none;
+  padding: 5% 15%;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8%;
+}
+
+.input-field-container .login-buttons-div button:hover {
+  background-color: #ffa502;
+}
+
+.input-field-container .submit-button {
+  background-color: #a3cb38;
+  color: #dff9fb;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  border-radius: 2%;
+  border: none;
+  outline: none;
+  padding: 5% 15%;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.input-field-container .submit-button:hover {
+  background-color: #c4e538;
+}
+
+.input-field-container .guest-button {
+  background-color: #0652dd;
+  color: #dff9fb;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  border-radius: 2%;
+  border: none;
+  outline: none;
+  padding: 5% 15%;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.input-field-container .guest-button:hover {
+  background-color: #1289a7;
+}
+
+.game-options-menu {
+  width: 80vw;
+  height: 80vh;
+  margin: 4.5% auto;
+  background-color: #535c68;
+  border-radius: 1%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+}
+
+.game-options-menu .generate-token {
+  background-color: #eccc68;
+  color: #57606f;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  border-radius: 2%;
+  border: none;
+  outline: none;
+  padding: 5% 15%;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8%;
+}
+
+.game-options-menu .generate-token:hover {
+  background-color: #ffa502;
+}
+
+.game-options-menu .play-localy {
+  background-color: #9c88ff;
+  color: #57606f;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  border-radius: 2%;
+  border: none;
+  outline: none;
+  padding: 5% 15%;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8%;
+}
+
+.game-options-menu .play-localy:hover {
+  background-color: #0097e6;
+}
+
+.game-options-menu .join {
+  background-color: #7f8fa6;
+  color: #e1b12c;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  border-radius: 2%;
+  border: none;
+  outline: none;
+  padding: 5% 15%;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8%;
+}
+
+.game-options-menu .join:hover {
+  background-color: #487eb0;
+}
+
+.game-options-menu .game-token {
+  color: #1289a7;
+}
+
+.game-options-menu .game-token span {
+  font-weight: 800;
+  color: #0652dd;
+}
+
+.game-info {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20vw;
+  height: 30vh;
+  background-color: #535c68;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.game-info .player .one {
+  color: darkred;
+}
+
+.game-info .player .two {
+  color: darkblue;
 }
 /*# sourceMappingURL=main.css.map */

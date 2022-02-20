@@ -15,8 +15,8 @@ interface IJoinGameBody {
 }
 
 interface INewGameResponse {
-  playerOne: string | null;
-  playerTwo: string | null;
+  playerOne: { userName: string; id?: string } | null;
+  playerTwo: { userName: string } | null;
   gameId: string;
   gameinfo: IGameInfo;
 }

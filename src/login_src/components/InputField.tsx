@@ -57,7 +57,7 @@ export default function InputField() {
   return (
     <div className="input-field-container">
       <h1>Login Or Sign Up</h1>
-      <div>
+      <div className="login-buttons-div">
         <button className="login-button" onClick={(e) => switchForms(true)}>
           Log-In
         </button>
@@ -101,15 +101,19 @@ export default function InputField() {
           }
         />
       </div>
-      <button
-        className="submit-button"
-        onClick={async () => {
-          await submitForm();
-        }}
-      >
-        Submit
-      </button>
-      <button onClick={handleGuestLoging}>login as guest</button>
+      <div>
+        <button
+          className="submit-button"
+          onClick={async () => {
+            await submitForm();
+          }}
+        >
+          Submit
+        </button>
+        <button className="guest-button" onClick={handleGuestLoging}>
+          login as guest
+        </button>
+      </div>
     </div>
   );
 }

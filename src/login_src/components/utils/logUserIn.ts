@@ -20,7 +20,7 @@ export async function loginUserIn(
     );
     document.cookie = data.token;
     mainStore.dispatch(setUserId(data.id));
-    navigate("/game");
+    navigate("/gameoptions");
     return data.token;
   } catch (err: any) {
     const loginError = validateErr(err);

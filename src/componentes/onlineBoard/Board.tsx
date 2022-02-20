@@ -110,10 +110,21 @@ const OnlineBoard = () => {
 
   return (
     <Fragment>
-      <h1>
-        current turn: {currentTurn} player one: {players.playerOne} player two:
-        {players.playerTwo}
-      </h1>
+      <div className="game-info">
+        <div className="current-turn">
+          current turn:
+          <span style={currentTurn !== null ? { color: currentTurn } : {}}>
+            {currentTurn}
+          </span>
+        </div>
+        <div className="player">
+          <span className="one">player one:</span> {players.playerOne}
+        </div>
+        <div className="player">
+          <span className="two">player two:</span>
+          {players.playerTwo}
+        </div>
+      </div>
       <div id="board">{rows.map((row) => row)}</div>
     </Fragment>
   );

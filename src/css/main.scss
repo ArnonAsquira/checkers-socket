@@ -1,5 +1,25 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@200&display=swap");
+
 body {
   background: #f6e58d;
+  font-family: "Roboto Serif", sans-serif;
+}
+
+@mixin button($primColor, $hoverColor, $textColor) {
+  background-color: $primColor;
+  color: $textColor;
+  transition: all 0.5s;
+  border-radius: 2%;
+  border: none;
+  outline: none;
+  padding: 5% 15%;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  &:hover {
+    background-color: $hoverColor;
+  }
 }
 
 @mixin player($color) {
@@ -12,8 +32,8 @@ body {
 
 #board {
   margin: auto auto;
-  width: 80vw;
-  height: 95vh;
+  width: 60vw;
+  height: 80vh;
   border: 1px solid black;
   display: flex;
   flex-direction: column;
@@ -45,4 +65,97 @@ body {
 }
 .indicator {
   @include player(#535c68);
+}
+
+.input-field-container {
+  width: 80vw;
+  height: 80vh;
+  margin: 4.5% auto;
+  background-color: #535c68;
+  border-radius: 1%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  h1 {
+    color: #dff9fb;
+    text-align: center;
+  }
+  form {
+    margin-top: 10%;
+    margin-bottom: 10%;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: space-between;
+    label {
+      color: #dff9fb;
+      margin-right: 15%;
+    }
+  }
+
+  .login-buttons-div {
+    button {
+      @include button(#eccc68, #ffa502, #57606f);
+      margin-top: 8%;
+    }
+  }
+  .submit-button {
+    @include button(#a3cb38, #c4e538, #dff9fb);
+  }
+  .guest-button {
+    @include button(#0652dd, #1289a7, #dff9fb);
+  }
+}
+
+.game-options-menu {
+  width: 80vw;
+  height: 80vh;
+  margin: 4.5% auto;
+  background-color: #535c68;
+  border-radius: 1%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+
+  .generate-token {
+    @include button(#eccc68, #ffa502, #57606f);
+    margin-top: 8%;
+  }
+  .play-localy {
+    @include button(#9c88ff, #0097e6, #57606f);
+    margin-top: 8%;
+  }
+  .join {
+    @include button(#7f8fa6, #487eb0, #e1b12c);
+    margin-top: 8%;
+  }
+  .game-token {
+    color: #1289a7;
+    span {
+      font-weight: 800;
+      color: #0652dd;
+    }
+  }
+}
+
+.game-info {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20vw;
+  height: 30vh;
+  background-color: #535c68;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  .player {
+    .one {
+      color: darkred;
+    }
+    .two {
+      color: darkblue;
+    }
+  }
 }
