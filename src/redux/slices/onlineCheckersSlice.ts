@@ -1,16 +1,28 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IBoardPositions, PlatyerColors } from "../../types/boardTypes";
+import {
+  IBoardPositions,
+  IndicatorInfo,
+  IPieceInfoObject,
+  PlatyerColors,
+} from "../../types/boardTypes";
+import { IActiveGamePlayers } from "../../types/socketTypes";
 
 interface IOnlineCheckersSlice {
+  players: IActiveGamePlayers;
   currentTurn: PlatyerColors | null;
   usersColor: PlatyerColors | null;
   gamePositions: IBoardPositions | null;
+  indicators: IndicatorInfo[];
+  selectedPiece: IPieceInfoObject | null;
 }
 
 const initialState: IOnlineCheckersSlice = {
   currentTurn: null,
   usersColor: null,
   gamePositions: null,
+  indicators: [],
+  players: { playerOne: "", playerTwo: "" },
+  selectedPiece: null,
 };
 
 const onlineCheckersSlice = createSlice({
@@ -29,9 +41,36 @@ const onlineCheckersSlice = createSlice({
       ...state,
       gamePositions: action.payload,
     }),
+    setIndicators: (state, action: PayloadAction<IndicatorInfo[]>) => ({
+      ...state,
+      indicators: action.payload,
+    }),
+    setGamePlayers: (state, action: PayloadAction<IActiveGamePlayers>) => ({
+      ...state,
+      players: action.payload,
+    }),
+    addPlayer: (state, action: PayloadAction<string>) => ({
+      ...state,
+      players: { ...state.players, playerTwo: action.payload },
+    }),
+    setSelectedPiece: (
+      state,
+      action: PayloadAction<IPieceInfoObject | null>
+    ) => ({
+      ...state,
+      selectedPiece: action.payload,
+    }),
   },
 });
 
-export const { setTurn } = onlineCheckersSlice.actions;
+export const {
+  setTurn,
+  setGamePositions,
+  setUsersColor,
+  setGamePlayers,
+  addPlayer,
+  setIndicators,
+  setSelectedPiece,
+} = onlineCheckersSlice.actions;
 
 export default onlineCheckersSlice.reducer;

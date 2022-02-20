@@ -4,13 +4,22 @@ import { socketApiBaseUrl } from "../constants/socket";
 import { useSelector, useStore } from "react-redux";
 import { MainStore } from "../redux/mainStore";
 import { joinedGame, setGameToken } from "../redux/slices/socketSlice";
-import { IGameToken } from "../types/socketTypes";
+import { IGameToken, INewGameResponse } from "../types/socketTypes";
 import axios from "axios";
 import { useRef } from "react";
+import {
+  setGamePlayers,
+  setGamePositions,
+  setTurn,
+  setUsersColor,
+} from "../redux/slices/onlineCheckersSlice";
+import { colorOne, colorTwo } from "../constants/board";
+import { joinSocketGame } from "../socketLogic/initialConnection";
 
 const GameOptions = () => {
   const socketSlice = useSelector((state: MainStore) => state.socket);
   const gameToken = socketSlice.gameToken;
+  const userId = socketSlice.userId;
   const mainStore = useStore();
   const navigate = useNavigate();
 
@@ -31,19 +40,46 @@ const GameOptions = () => {
     navigate(offlineGamePath);
   };
 
-  const goToOnlineGame = async (gameToken: string) => {
-    try {
-      const { data } = await axios.post(`${socketApiBaseUrl}/game/join`, {
-        userId: socketSlice.userId,
-        gameToken,
-      });
-      console.log(data);
-      mainStore.dispatch(joinedGame(true));
-      navigate(onlineChckersPath);
-    } catch (err: any) {
-      console.log(err.response);
-      return alert(err && err.response && err.response.data);
+  const handleJoinGame = async (gameToken: string) => {
+    if (userId === null) {
+      return alert("please login");
     }
+    try {
+      const { data }: { data: INewGameResponse } = await axios.post(
+        `${socketApiBaseUrl}/game/join`,
+        {
+          userId: userId,
+          gameToken,
+        }
+      );
+      updateInitialGameData(data);
+      joinSocketGame(data.gameId, userId);
+      goToOnlineGame();
+    } catch (err: any) {
+      console.log(err);
+      alert(err && err.response && err.response.data);
+    }
+  };
+
+  const goToOnlineGame = () => {
+    navigate(onlineChckersPath);
+  };
+
+  const updateInitialGameData = (gameData: INewGameResponse) => {
+    mainStore.dispatch(joinedGame(true));
+    mainStore.dispatch(setGamePositions(gameData.gameinfo.positions));
+    mainStore.dispatch(
+      setUsersColor(
+        gameData.playerOne === socketSlice.userId ? colorOne : colorTwo
+      )
+    );
+    mainStore.dispatch(
+      setGamePlayers({
+        playerOne: gameData.playerOne,
+        playerTwo: gameData.playerTwo,
+      })
+    );
+    mainStore.dispatch(setTurn(colorOne));
   };
 
   return (
@@ -62,7 +98,7 @@ const GameOptions = () => {
           if (tokenRef.current === null) {
             return alert("please enter game token");
           }
-          goToOnlineGame(tokenRef.current.value);
+          handleJoinGame(tokenRef.current.value);
         }}
       >
         join
