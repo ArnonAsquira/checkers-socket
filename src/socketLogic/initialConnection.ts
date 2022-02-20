@@ -7,8 +7,9 @@ import {
   setGamePositions,
   setIndicators,
   setSelectedPiece,
+  setTurn,
 } from "../redux/slices/onlineCheckersSlice";
-import { setIoConnection } from "../redux/slices/socketSlice";
+import { setGameToken, setIoConnection } from "../redux/slices/socketSlice";
 import {
   IBoardPositions,
   IndicatorInfo,
@@ -23,6 +24,7 @@ const makeSocketConnection = (url: string) => {
 };
 
 const joinSocketGame = (gameId: string, userId: string) => {
+  mainStore.dispatch(setGameToken(gameId));
   const socket = makeSocketConnection(socketApiBaseUrl);
   socket.emit("join game", gameId, userId);
   handleSocketLogic(socket);
@@ -49,6 +51,7 @@ const handleSocketLogic = (
     mainStore.dispatch(setGamePositions(gameInfo.positions));
     mainStore.dispatch(setIndicators(gameInfo.indicators));
     mainStore.dispatch(setSelectedPiece(gameInfo.selcetedPiece));
+    mainStore.dispatch(setTurn(gameInfo.turn));
   });
 };
 

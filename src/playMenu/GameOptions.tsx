@@ -15,6 +15,7 @@ import {
 } from "../redux/slices/onlineCheckersSlice";
 import { colorOne, colorTwo } from "../constants/board";
 import { joinSocketGame } from "../socketLogic/initialConnection";
+import { authAxiosConfig } from "../constants/axios";
 
 const GameOptions = () => {
   const socketSlice = useSelector((state: MainStore) => state.socket);
@@ -50,7 +51,8 @@ const GameOptions = () => {
         {
           userId: userId,
           gameToken,
-        }
+        },
+        authAxiosConfig()
       );
       updateInitialGameData(data);
       joinSocketGame(data.gameId, userId);

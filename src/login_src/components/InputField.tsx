@@ -11,6 +11,7 @@ import { playMenuPath } from "../constants/appPaths";
 import { useStore } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import { setUserId } from "../../redux/slices/socketSlice";
+import axios from "axios";
 
 export default function InputField() {
   const initalLoginState: LoginValues = {
@@ -42,8 +43,13 @@ export default function InputField() {
       : setLoginState(false);
   }
 
-  const handleGuestLoging = () => {
-    const userId = uuidv4();
+  const handleGuestLoging = async () => {
+    const { data }: { data: { token: string; id: string } } = await axios.post(
+      `${baseUrl}/login/guest`
+    );
+    const token = data.token;
+    const userId = data.id;
+    document.cookie = token;
     mainStore.dispatch(setUserId(userId));
     navigate(playMenuPath);
   };

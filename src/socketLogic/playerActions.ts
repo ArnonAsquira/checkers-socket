@@ -4,19 +4,21 @@ import { IndicatorInfo, IPieceInfoObject } from "../types/boardTypes";
 const selectPiece = (piece: IPieceInfoObject) => {
   const gameId = mainStore.getState().socket.gameToken;
   const socket = mainStore.getState().socket.ioConnection;
+  const userId = mainStore.getState().socket.userId;
   if (socket === null) {
-    return;
+    return alert("socket connection lost");
   }
-  socket.emit("select piece", piece, gameId);
+  socket.emit("select piece", piece, gameId, userId);
 };
 
 const takeTurn = (indicator: IndicatorInfo) => {
   const gameId = mainStore.getState().socket.gameToken;
-  const socket = mainStore.getState().socket.ioConnection;
-  if (socket === null) {
+  const socketConnection = mainStore.getState().socket.ioConnection;
+  const userId = mainStore.getState().socket.userId;
+  if (socketConnection === null) {
     return console.log("no socket connection");
   }
-  socket.emit("take turn", indicator, gameId);
+  socketConnection.emit("take turn", indicator, gameId, userId);
 };
 
 export { selectPiece, takeTurn };
