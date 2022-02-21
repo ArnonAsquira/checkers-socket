@@ -29,7 +29,8 @@ const GameOptions = () => {
   const handleOnlineGameCreation = async () => {
     try {
       const { data }: { data: IGameToken } = await axios.get(
-        `${socketApiBaseUrl}/game/token`
+        `${socketApiBaseUrl}/game/token`,
+        authAxiosConfig()
       );
       mainStore.dispatch(setGameToken(data.gameToken));
     } catch (e) {

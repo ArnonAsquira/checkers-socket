@@ -288,4 +288,30 @@ body {
 .game-info .player .two {
   color: darkblue;
 }
+
+.log-out-of-game {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 5vw;
+}
+
+.log-out-of-game button {
+  background-color: darkred;
+  color: white;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  border-radius: 2%;
+  border: none;
+  outline: none;
+  padding: 5% 15%;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.log-out-of-game button:hover {
+  background-color: magenta;
+}
 /*# sourceMappingURL=main.css.map */

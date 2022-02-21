@@ -13,6 +13,7 @@ interface IJoinGameBody {
   userId: string;
   gameToken: string;
 }
+type ILogoutBody = IJoinGameBody;
 
 interface INewGameResponse {
   playerOne: { userName: string; id?: string } | null;
@@ -38,4 +39,5 @@ export type {
   INewGameResponse,
   IActiveGamePlayers,
   IGameInfo,
+  ILogoutBody,
 };

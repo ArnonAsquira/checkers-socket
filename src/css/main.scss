@@ -159,3 +159,13 @@ body {
     }
   }
 }
+
+.log-out-of-game {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 5vw;
+  button {
+    @include button(darkred, magenta, white);
+  }
+}

@@ -4,18 +4,20 @@ import { socketApiBaseUrl } from "../constants/socket";
 import mainStore from "../redux/mainStore";
 import {
   addPlayer,
+  removePlayer,
   setGamePositions,
   setIndicators,
   setSelectedPiece,
   setTurn,
 } from "../redux/slices/onlineCheckersSlice";
 import { setGameToken, setIoConnection } from "../redux/slices/socketSlice";
-import {
-  IBoardPositions,
-  IndicatorInfo,
-  IPieceInfoObject,
-} from "../types/boardTypes";
+import { IndicatorInfo, IPieceInfoObject } from "../types/boardTypes";
 import { IGameInfo } from "../types/socketTypes";
+import { createBrowserHistory } from "history";
+import { pushToHistory } from "../redux/slices/historySlice";
+import player from "../componentes/Player";
+
+let history = createBrowserHistory();
 
 const makeSocketConnection = (url: string) => {
   const socket = io(url);
@@ -52,6 +54,12 @@ const handleSocketLogic = (
     mainStore.dispatch(setIndicators(gameInfo.indicators));
     mainStore.dispatch(setSelectedPiece(gameInfo.selcetedPiece));
     mainStore.dispatch(setTurn(gameInfo.turn));
+  });
+
+  socket.on("player disconnected", (playerNum) => {
+    console.log(playerNum);
+    alert("the other player has disconnected you have won the game");
+    mainStore.dispatch(removePlayer(playerNum));
   });
 };
 

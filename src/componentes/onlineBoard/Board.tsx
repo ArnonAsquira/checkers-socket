@@ -2,30 +2,25 @@ import BoardSqaure from "./BoardSquare";
 import {
   IndicatorInfo,
   Location,
-  IBoardPositions,
   IPieceInfoObject,
-  ITurn,
-  PlatyerColors,
 } from "../../types/boardTypes";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment } from "react";
 import arrayEqual, { arrayIncludes } from "../utils/arrayEqual";
-import {
-  initailPlayersLocations,
-  amountOfRows,
-  quardinatnts,
-} from "../utils/boardBuild";
-import { indicatorLocations, oppositeColor } from "../utils/boardUtils";
-import { adjacentPieces } from "../utils/mandatoryMoves";
-import { colorOne, colorTwo } from "../../constants/board";
-import { useSelector, useStore } from "react-redux";
+import { amountOfRows, quardinatnts } from "../utils/boardBuild";
+import { useSelector } from "react-redux";
 import { MainStore } from "../../redux/mainStore";
 import {
   selectPiece,
   takeTurn as takeTurnSocket,
 } from "../../socketLogic/playerActions";
+import axios from "axios";
+import { socketApiBaseUrl } from "../../constants/socket";
 import socketSlice from "../../redux/slices/socketSlice";
+import { authAxiosConfig } from "../../constants/axios";
+import { useNavigate } from "react-router-dom";
 
 const OnlineBoard = () => {
+  const socketSlice = useSelector((state: MainStore) => state.socket);
   const gamaSlice = useSelector(
     (state: MainStore) => state.onlineCheckersBoard
   );
@@ -35,6 +30,8 @@ const OnlineBoard = () => {
   const indicators = gamaSlice.indicators;
   const players = gamaSlice.players;
   const selectedPiece = gamaSlice.selectedPiece;
+
+  const navigate = useNavigate();
 
   if (postions === null) {
     return null;
@@ -56,6 +53,38 @@ const OnlineBoard = () => {
       return alert("this is not your turn");
     }
     selectPiece(piece);
+  };
+
+  const handleQuitGame = async () => {
+    try {
+      if (players.playerOne === null || players.playerTwo == null) {
+        navigate("/gameOptions");
+        return await axios.post(
+          `${socketApiBaseUrl}/game/logout`,
+          {
+            userId: socketSlice.userId,
+            gameToken: socketSlice.gameToken,
+          },
+          authAxiosConfig()
+        );
+      }
+      const playerIsSure = window.confirm(
+        "are you sure you want to quit and lose the game"
+      );
+      if (!playerIsSure) return;
+      const { data } = await axios.post(
+        `${socketApiBaseUrl}/game/logout`,
+        {
+          userId: socketSlice.userId,
+          gameToken: socketSlice.gameToken,
+        },
+        authAxiosConfig()
+      );
+      console.log(data);
+      navigate("/gameoptions");
+    } catch (err: any) {
+      alert(err && err.response && err.response.data);
+    }
   };
 
   const rows = [];
@@ -110,6 +139,9 @@ const OnlineBoard = () => {
 
   return (
     <Fragment>
+      <div className="log-out-of-game">
+        <button onClick={handleQuitGame}>quit game</button>
+      </div>
       <div className="game-info">
         <div className="current-turn">
           current turn:

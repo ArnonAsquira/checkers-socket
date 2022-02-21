@@ -53,6 +53,13 @@ const onlineCheckersSlice = createSlice({
       ...state,
       players: { ...state.players, playerTwo: action.payload },
     }),
+    removePlayer: (state, action: PayloadAction<number>) => ({
+      ...state,
+      players: {
+        playerOne: action.payload === 1 ? null : state.players.playerOne,
+        playerTwo: action.payload === 2 ? null : state.players.playerTwo,
+      },
+    }),
     setSelectedPiece: (
       state,
       action: PayloadAction<IPieceInfoObject | null>
@@ -71,6 +78,7 @@ export const {
   addPlayer,
   setIndicators,
   setSelectedPiece,
+  removePlayer,
 } = onlineCheckersSlice.actions;
 
 export default onlineCheckersSlice.reducer;
