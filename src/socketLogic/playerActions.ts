@@ -1,3 +1,4 @@
+import { outGoingSocketEvents } from "../constants/socket";
 import mainStore from "../redux/mainStore";
 import { IndicatorInfo, IPieceInfoObject } from "../types/boardTypes";
 
@@ -8,7 +9,7 @@ const selectPiece = (piece: IPieceInfoObject) => {
   if (socket === null) {
     return alert("socket connection lost");
   }
-  socket.emit("select piece", piece, gameId, userId);
+  socket.emit(outGoingSocketEvents.selectPiece, piece, gameId, userId);
 };
 
 const takeTurn = (indicator: IndicatorInfo) => {
@@ -18,7 +19,12 @@ const takeTurn = (indicator: IndicatorInfo) => {
   if (socketConnection === null) {
     return console.log("no socket connection");
   }
-  socketConnection.emit("take turn", indicator, gameId, userId);
+  socketConnection.emit(
+    outGoingSocketEvents.takeTurn,
+    indicator,
+    gameId,
+    userId
+  );
 };
 
 export { selectPiece, takeTurn };

@@ -16,6 +16,7 @@ import {
 import { colorOne, colorTwo } from "../constants/board";
 import { joinSocketGame } from "../socketLogic/initialConnection";
 import { authAxiosConfig } from "../constants/axios";
+import StatisticsView from "./statistics/StatsMainScreen";
 
 const GameOptions = () => {
   const socketSlice = useSelector((state: MainStore) => state.socket);
@@ -69,7 +70,6 @@ const GameOptions = () => {
   };
 
   const updateInitialGameData = (gameData: INewGameResponse) => {
-    console.log(gameData);
     mainStore.dispatch(joinedGame(true));
     mainStore.dispatch(setGamePositions(gameData.gameinfo.positions));
     mainStore.dispatch(
@@ -97,6 +97,7 @@ const GameOptions = () => {
           play localy
         </button>
       </div>
+      <StatisticsView />
       <div>
         <label htmlFor="join-game">join game</label>
         <input

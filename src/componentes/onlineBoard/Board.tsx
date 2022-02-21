@@ -15,7 +15,6 @@ import {
 } from "../../socketLogic/playerActions";
 import axios from "axios";
 import { socketApiBaseUrl } from "../../constants/socket";
-import socketSlice from "../../redux/slices/socketSlice";
 import { authAxiosConfig } from "../../constants/axios";
 import { useNavigate } from "react-router-dom";
 
