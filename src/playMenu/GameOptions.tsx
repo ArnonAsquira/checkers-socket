@@ -10,6 +10,7 @@ import { useRef } from "react";
 import {
   setGamePlayers,
   setGamePositions,
+  setTimers,
   setTurn,
   setUsersColor,
 } from "../redux/slices/onlineCheckersSlice";
@@ -81,6 +82,12 @@ const GameOptions = () => {
       setGamePlayers({
         playerOne: gameData.playerOne && gameData.playerOne.userName,
         playerTwo: gameData.playerTwo && gameData.playerTwo.userName,
+      })
+    );
+    mainStore.dispatch(
+      setTimers({
+        playerOne: gameData.playerOne && gameData.playerOne.time,
+        playerTwo: gameData.playerTwo && gameData.playerTwo.time,
       })
     );
     mainStore.dispatch(setTurn(colorOne));

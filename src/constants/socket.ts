@@ -5,6 +5,10 @@ const incomingSocketEvents = {
   newGameObject: "new game object",
   indicators: "indicators",
   joinedGame: "joined game",
+  winner: "winner",
+  loser: "loser",
+  updateTime: "update time",
+  err: "err",
 };
 
 const outGoingSocketEvents = {

@@ -17,6 +17,7 @@ import axios from "axios";
 import { socketApiBaseUrl } from "../../constants/socket";
 import { authAxiosConfig } from "../../constants/axios";
 import { useNavigate } from "react-router-dom";
+import GameInfo from "./GameInfo";
 
 const OnlineBoard = () => {
   const socketSlice = useSelector((state: MainStore) => state.socket);
@@ -29,6 +30,7 @@ const OnlineBoard = () => {
   const indicators = gamaSlice.indicators;
   const players = gamaSlice.players;
   const selectedPiece = gamaSlice.selectedPiece;
+  const timers = gamaSlice.timers;
 
   const navigate = useNavigate();
 
@@ -115,7 +117,20 @@ const OnlineBoard = () => {
                   : undefined
               }
               setSelectedPiece={setSelectedPiece}
-              isQueen={false}
+              isQueen={
+                arrayIncludes(
+                  location,
+                  postions.blue
+                    .filter((info) => info.isQueen)
+                    .map((info) => info.location)
+                ) ||
+                arrayIncludes(
+                  location,
+                  postions.red
+                    .filter((info) => info.isQueen)
+                    .map((info) => info.location)
+                )
+              }
               isSelectedPiece={
                 selectedPiece !== null &&
                 arrayEqual(location, selectedPiece.location)
@@ -141,21 +156,7 @@ const OnlineBoard = () => {
       <div className="log-out-of-game">
         <button onClick={handleQuitGame}>quit game</button>
       </div>
-      <div className="game-info">
-        <div className="current-turn">
-          current turn:
-          <span style={currentTurn !== null ? { color: currentTurn } : {}}>
-            {currentTurn}
-          </span>
-        </div>
-        <div className="player">
-          <span className="one">player one:</span> {players.playerOne}
-        </div>
-        <div className="player">
-          <span className="two">player two:</span>
-          {players.playerTwo}
-        </div>
-      </div>
+      <GameInfo timers={timers} players={players} currentTurn={currentTurn} />
       <div id="board">{rows.map((row) => row)}</div>
     </Fragment>
   );

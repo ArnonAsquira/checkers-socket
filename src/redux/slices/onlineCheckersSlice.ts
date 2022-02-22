@@ -5,7 +5,7 @@ import {
   IPieceInfoObject,
   PlatyerColors,
 } from "../../types/boardTypes";
-import { IActiveGamePlayers } from "../../types/socketTypes";
+import { IActiveGamePlayers, IPlayerTimers } from "../../types/socketTypes";
 
 interface IOnlineCheckersSlice {
   players: IActiveGamePlayers;
@@ -14,6 +14,7 @@ interface IOnlineCheckersSlice {
   gamePositions: IBoardPositions | null;
   indicators: IndicatorInfo[];
   selectedPiece: IPieceInfoObject | null;
+  timers: IPlayerTimers;
 }
 
 const initialState: IOnlineCheckersSlice = {
@@ -23,6 +24,7 @@ const initialState: IOnlineCheckersSlice = {
   indicators: [],
   players: { playerOne: "", playerTwo: "" },
   selectedPiece: null,
+  timers: { playerOne: null, playerTwo: null },
 };
 
 const onlineCheckersSlice = createSlice({
@@ -67,6 +69,23 @@ const onlineCheckersSlice = createSlice({
       ...state,
       selectedPiece: action.payload,
     }),
+    setTimers: (state, action: PayloadAction<IPlayerTimers>) => ({
+      ...state,
+      timers: action.payload,
+    }),
+    passSecond: (state, action: PayloadAction<1 | 2>) => ({
+      ...state,
+      timers: {
+        playerOne:
+          action.payload === 1
+            ? state.timers.playerOne && state.timers.playerOne - 1
+            : state.timers.playerOne,
+        playerTwo:
+          action.payload === 2
+            ? state.timers.playerTwo && state.timers.playerTwo - 1
+            : state.timers.playerTwo,
+      },
+    }),
   },
 });
 
@@ -79,6 +98,8 @@ export const {
   setIndicators,
   setSelectedPiece,
   removePlayer,
+  setTimers,
+  passSecond,
 } = onlineCheckersSlice.actions;
 
 export default onlineCheckersSlice.reducer;

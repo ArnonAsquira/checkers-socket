@@ -62,6 +62,31 @@ const Board = () => {
     console.log(movesPlayed);
   }, [lastTurn]);
 
+  const isValidPiece = (
+    pieceInfo: IPieceInfoObject,
+    positions: IBoardPositions,
+    turn: "red" | "blue",
+    first: boolean,
+    mandatoryMoves: IndicatorInfo[]
+  ): boolean => {
+    let isValid = false;
+    if (mandatoryMoves.length < 0) return true;
+    const pieceIndicators = indicatorLocations(
+      pieceInfo,
+      positions,
+      turn,
+      first
+    );
+    for (const indicator of pieceIndicators) {
+      for (const move of mandatoryMoves) {
+        if (arrayEqual(move.location, indicator.location)) {
+          isValid = true;
+        }
+      }
+    }
+    return isValid;
+  };
+
   const takeTurn = (newLocation: Location) => {
     if (selectedPiece === null) return alert("please select a piece");
     if (

@@ -16,8 +16,8 @@ interface IJoinGameBody {
 type ILogoutBody = IJoinGameBody;
 
 interface INewGameResponse {
-  playerOne: { userName: string; id?: string } | null;
-  playerTwo: { userName: string } | null;
+  playerOne: { userName: string; id?: string; time: number } | null;
+  playerTwo: { userName: string; time: number } | null;
   gameId: string;
   gameinfo: IGameInfo;
 }
@@ -33,6 +33,11 @@ interface IActiveGamePlayers {
   playerTwo: string | null;
 }
 
+interface IPlayerTimers {
+  playerOne: number | null;
+  playerTwo: number | null;
+}
+
 export type {
   IGameToken,
   IJoinGameBody,
@@ -40,4 +45,5 @@ export type {
   IActiveGamePlayers,
   IGameInfo,
   ILogoutBody,
+  IPlayerTimers,
 };

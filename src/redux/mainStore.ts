@@ -9,6 +9,8 @@ const mainStore = configureStore({
     onlineCheckersBoard: onlineCheckersBoardReducer,
     history: histortyReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({ serializableCheck: false }),
 });
 
 type MainStore = ReturnType<typeof mainStore.getState>;

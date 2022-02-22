@@ -12,11 +12,12 @@ import {
   setGamePositions,
   setIndicators,
   setSelectedPiece,
+  setTimers,
   setTurn,
 } from "../redux/slices/onlineCheckersSlice";
 import { setGameToken, setIoConnection } from "../redux/slices/socketSlice";
 import { IndicatorInfo, IPieceInfoObject } from "../types/boardTypes";
-import { IGameInfo } from "../types/socketTypes";
+import { IGameInfo, IPlayerTimers } from "../types/socketTypes";
 
 const makeSocketConnection = (url: string) => {
   const socket = io(url);
@@ -34,11 +35,17 @@ const joinSocketGame = (gameId: string, userId: string) => {
 const handleSocketLogic = (
   socket: Socket<DefaultEventsMap, DefaultEventsMap>
 ) => {
-  socket.on(incomingSocketEvents.joinedGame, (userId: string) => {
+  socket.on(incomingSocketEvents.joinedGame, (userId: string, time: number) => {
     if (typeof userId !== "string") {
       return;
     }
     mainStore.dispatch(addPlayer(userId));
+    mainStore.dispatch(
+      setTimers({
+        ...mainStore.getState().onlineCheckersBoard.timers,
+        playerTwo: time,
+      })
+    );
   });
   socket.on(
     incomingSocketEvents.indicators,
@@ -61,7 +68,21 @@ const handleSocketLogic = (
     mainStore.dispatch(removePlayer(playerNum));
   });
 
-  socket.on("err", (err: string) => {
+  socket.on(incomingSocketEvents.winner, (playerNum) => {
+    alert(`you have won the game`);
+    mainStore.dispatch(removePlayer(playerNum));
+  });
+
+  socket.on(incomingSocketEvents.loser, (playerNum) => {
+    alert("you have lost the game");
+    mainStore.dispatch(removePlayer(playerNum));
+  });
+
+  socket.on(incomingSocketEvents.updateTime, (timersData: IPlayerTimers) => {
+    mainStore.dispatch(setTimers(timersData));
+  });
+
+  socket.on(incomingSocketEvents.err, (err: string) => {
     alert(err);
   });
 };
