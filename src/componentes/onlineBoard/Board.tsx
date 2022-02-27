@@ -19,6 +19,8 @@ import { authAxiosConfig } from "../../constants/axios";
 import { useNavigate } from "react-router-dom";
 import GameInfo from "./GameInfo";
 import { cleanGame } from "../../redux/slices/onlineCheckersSlice";
+import ChatDialog from "./chat/ChatDialog";
+import { resetChat } from "../../redux/slices/chatSlice";
 
 const OnlineBoard = () => {
   const socketSlice = useSelector((state: MainStore) => state.socket);
@@ -35,7 +37,7 @@ const OnlineBoard = () => {
 
   const navigate = useNavigate();
 
-  if (postions === null) {
+  if (postions === null || socketSlice.gameToken === null) {
     return null;
   }
 
@@ -85,8 +87,12 @@ const OnlineBoard = () => {
       );
       mainStore.dispatch(cleanGame(1));
       navigate("/gameoptions");
+      mainStore.dispatch(resetChat());
     } catch (err: any) {
-      alert(err && err.response && err.response.data);
+      const parsedErr = err && err.response && err.response.data;
+      if (parsedErr !== "game does not exist") {
+        alert(parsedErr);
+      }
     }
   };
 
@@ -157,6 +163,7 @@ const OnlineBoard = () => {
     <Fragment>
       <div className="log-out-of-game">
         <button onClick={handleQuitGame}>quit game</button>
+        <ChatDialog gameId={socketSlice.gameToken} />
       </div>
       <GameInfo timers={timers} players={players} currentTurn={currentTurn} />
       <div id="board">{rows.map((row) => row)}</div>

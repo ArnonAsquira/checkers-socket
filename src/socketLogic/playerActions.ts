@@ -27,4 +27,12 @@ const takeTurn = (indicator: IndicatorInfo) => {
   );
 };
 
-export { selectPiece, takeTurn };
+const sendMessage = (message: string, gameToken: string) => {
+  const socketConnection = mainStore.getState().socket.ioConnection;
+  if (socketConnection === null) {
+    return console.log("no socket connection");
+  }
+  socketConnection.emit(outGoingSocketEvents.message, message, gameToken);
+};
+
+export { selectPiece, takeTurn, sendMessage };

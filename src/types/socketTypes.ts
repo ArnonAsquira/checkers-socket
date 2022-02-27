@@ -51,6 +51,11 @@ interface IPlayersStats {
   };
 }
 
+interface IMessageObj {
+  userName: string;
+  content: string;
+}
+
 export type {
   IGameToken,
   IJoinGameBody,
@@ -61,4 +66,5 @@ export type {
   IPlayerTimers,
   IPlayersStats,
   IScoreData,
+  IMessageObj,
 };

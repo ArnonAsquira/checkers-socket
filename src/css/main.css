@@ -341,4 +341,52 @@ body {
 .log-out-of-game button:hover {
   background-color: magenta;
 }
+
+.open-chat {
+  cursor: pointer;
+}
+
+.chat-dialog {
+  position: absolute;
+  left: -300%;
+  top: 50%;
+}
+
+.chat-dialog .messages-area {
+  background-color: #95afc0;
+  padding: 20%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.chat-dialog .messages-area .message {
+  font-size: 0.75rem;
+  border: solid 1px black;
+  border-radius: 2rem;
+  padding: 20%;
+  margin-bottom: 10%;
+  width: 100%;
+}
+
+.chat-dialog .messages-area .message .sender {
+  font-weight: 600;
+}
+
+.unseen-messages-counter {
+  background-color: #eb4d4b;
+  color: #ecf0f1;
+  border-radius: 100%;
+  position: absolute;
+  padding: 20%;
+  left: 0;
+  top: 100%;
+}
 /*# sourceMappingURL=main.css.map */

@@ -1,11 +1,13 @@
 import { io, Socket } from "socket.io-client";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
+import { authAxiosConfig } from "../constants/axios";
 import {
   incomingSocketEvents,
   outGoingSocketEvents,
   socketApiBaseUrl,
 } from "../constants/socket";
 import mainStore from "../redux/mainStore";
+import { addMessage } from "../redux/slices/chatSlice";
 import {
   addPlayer,
   removePlayer,
@@ -17,10 +19,13 @@ import {
 } from "../redux/slices/onlineCheckersSlice";
 import { setGameToken, setIoConnection } from "../redux/slices/socketSlice";
 import { IndicatorInfo, IPieceInfoObject } from "../types/boardTypes";
-import { IGameInfo, IPlayerTimers } from "../types/socketTypes";
+import { IGameInfo, IMessageObj, IPlayerTimers } from "../types/socketTypes";
+import { handleNewMessage } from "./utils/chat";
 
 const makeSocketConnection = (url: string) => {
-  const socket = io(url);
+  const socket = io(url, {
+    auth: { token: authAxiosConfig().headers.authorization },
+  });
   mainStore.dispatch(setIoConnection(socket));
   return socket;
 };
@@ -78,6 +83,10 @@ const handleSocketLogic = (
 
   socket.on(incomingSocketEvents.updateTime, (timersData: IPlayerTimers) => {
     mainStore.dispatch(setTimers(timersData));
+  });
+
+  socket.on(incomingSocketEvents.message, (messageObj: IMessageObj) => {
+    handleNewMessage(messageObj);
   });
 
   socket.on(incomingSocketEvents.err, (err: any) => {

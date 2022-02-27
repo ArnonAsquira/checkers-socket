@@ -28,7 +28,6 @@ const BoardSqaure = ({
 
   return (
     <div className={color}>
-      {/* {location[0]}, {location[1]} */}
       {player ? (
         player === "indicator" ? (
           <PossibleMoveIndicator location={location} handleClick={takeTurn} />
