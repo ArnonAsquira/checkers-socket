@@ -45,8 +45,9 @@ const ChatDialog: FC<IChatDialogProps> = ({ gameId }) => {
       </div>
       <dialog className="chat-dialog" open={chatSlice.chatIsOpen}>
         <div className="messages-area">
-          {chatSlice.messages.map((message) => (
+          {chatSlice.messages.map((message, i) => (
             <div
+              key={i}
               className="message"
               style={{
                 backgroundColor:

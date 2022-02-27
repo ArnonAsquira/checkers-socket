@@ -7,7 +7,6 @@ import {
   socketApiBaseUrl,
 } from "../constants/socket";
 import mainStore from "../redux/mainStore";
-import { addMessage } from "../redux/slices/chatSlice";
 import {
   addPlayer,
   removePlayer,
@@ -91,7 +90,6 @@ const handleSocketLogic = (
   });
 
   socket.on(incomingSocketEvents.err, (err: any) => {
-    console.log({ err });
     if (typeof err === "string") {
       if (err === "game does not exist") {
         return;

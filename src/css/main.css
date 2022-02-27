@@ -31,6 +31,8 @@ body {
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
+  margin: 0;
+  padding: 0;
 }
 
 #board div div {
@@ -53,6 +55,8 @@ body {
   height: 100%;
   border-radius: 100%;
   cursor: pointer;
+  -webkit-box-shadow: inset 5px 5px;
+          box-shadow: inset 5px 5px;
 }
 
 .blue-player {
@@ -61,6 +65,8 @@ body {
   height: 100%;
   border-radius: 100%;
   cursor: pointer;
+  -webkit-box-shadow: inset 5px 5px;
+          box-shadow: inset 5px 5px;
 }
 
 .indicator {
@@ -69,6 +75,8 @@ body {
   height: 100%;
   border-radius: 100%;
   cursor: pointer;
+  -webkit-box-shadow: inset 5px 5px;
+          box-shadow: inset 5px 5px;
 }
 
 .input-field-container {

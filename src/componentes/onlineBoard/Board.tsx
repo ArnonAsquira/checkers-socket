@@ -21,6 +21,7 @@ import GameInfo from "./GameInfo";
 import { cleanGame } from "../../redux/slices/onlineCheckersSlice";
 import ChatDialog from "./chat/ChatDialog";
 import { resetChat } from "../../redux/slices/chatSlice";
+import { gameOptionsPath } from "../../login_src/constants/appPaths";
 
 const OnlineBoard = () => {
   const socketSlice = useSelector((state: MainStore) => state.socket);
@@ -63,7 +64,7 @@ const OnlineBoard = () => {
     try {
       if (players.playerOne === null || players.playerTwo == null) {
         mainStore.dispatch(cleanGame(1));
-        navigate("/gameOptions");
+        navigate(gameOptionsPath);
         return await axios.post(
           `${socketApiBaseUrl}/game/logout`,
           {
@@ -86,7 +87,7 @@ const OnlineBoard = () => {
         authAxiosConfig()
       );
       mainStore.dispatch(cleanGame(1));
-      navigate("/gameoptions");
+      navigate(gameOptionsPath);
       mainStore.dispatch(resetChat());
     } catch (err: any) {
       const parsedErr = err && err.response && err.response.data;

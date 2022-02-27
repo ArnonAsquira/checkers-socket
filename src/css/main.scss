@@ -28,6 +28,7 @@ body {
   height: 100%;
   border-radius: 100%;
   cursor: pointer;
+  box-shadow: inset 5px 5px;
 }
 
 #board {
@@ -43,6 +44,8 @@ body {
     border-collapse: collapse;
     display: flex;
     flex-direction: row;
+    margin: 0;
+    padding: 0;
     div {
       flex: 1;
     }
