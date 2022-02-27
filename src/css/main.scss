@@ -138,6 +138,25 @@ body {
       color: #0652dd;
     }
   }
+
+  .stats-graph {
+    width: 180px;
+    height: 180px;
+  }
+}
+.scores-history {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-self: flex-start;
+  align-self: flex-start;
+  top: 100px;
+  border: 2px solid #3498db;
+  background-color: #ecf0f1;
+  width: 20%;
+  h1 {
+    color: #535c68;
+  }
 }
 
 .game-info {

@@ -8,7 +8,7 @@ import { Fragment } from "react";
 import arrayEqual, { arrayIncludes } from "../utils/arrayEqual";
 import { amountOfRows, quardinatnts } from "../utils/boardBuild";
 import { useSelector } from "react-redux";
-import { MainStore } from "../../redux/mainStore";
+import mainStore, { MainStore } from "../../redux/mainStore";
 import {
   selectPiece,
   takeTurn as takeTurnSocket,
@@ -18,6 +18,7 @@ import { socketApiBaseUrl } from "../../constants/socket";
 import { authAxiosConfig } from "../../constants/axios";
 import { useNavigate } from "react-router-dom";
 import GameInfo from "./GameInfo";
+import { cleanGame } from "../../redux/slices/onlineCheckersSlice";
 
 const OnlineBoard = () => {
   const socketSlice = useSelector((state: MainStore) => state.socket);
@@ -59,6 +60,7 @@ const OnlineBoard = () => {
   const handleQuitGame = async () => {
     try {
       if (players.playerOne === null || players.playerTwo == null) {
+        mainStore.dispatch(cleanGame(1));
         navigate("/gameOptions");
         return await axios.post(
           `${socketApiBaseUrl}/game/logout`,
@@ -73,7 +75,7 @@ const OnlineBoard = () => {
         "are you sure you want to quit and lose the game"
       );
       if (!playerIsSure) return;
-      const { data } = await axios.post(
+      await axios.post(
         `${socketApiBaseUrl}/game/logout`,
         {
           userId: socketSlice.userId,
@@ -81,7 +83,7 @@ const OnlineBoard = () => {
         },
         authAxiosConfig()
       );
-      console.log(data);
+      mainStore.dispatch(cleanGame(1));
       navigate("/gameoptions");
     } catch (err: any) {
       alert(err && err.response && err.response.data);

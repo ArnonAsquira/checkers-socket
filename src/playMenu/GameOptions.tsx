@@ -71,6 +71,7 @@ const GameOptions = () => {
   };
 
   const updateInitialGameData = (gameData: INewGameResponse) => {
+    console.log({ gameData });
     mainStore.dispatch(joinedGame(true));
     mainStore.dispatch(setGamePositions(gameData.gameinfo.positions));
     mainStore.dispatch(

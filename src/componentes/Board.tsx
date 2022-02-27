@@ -17,6 +17,7 @@ import {
 import { indicatorLocations, oppositeColor } from "./utils/boardUtils";
 import { adjacentPieces } from "./utils/mandatoryMoves";
 import { colorOne, colorTwo } from "../constants/board";
+import { useNavigate } from "react-router-dom";
 
 const Board = () => {
   const [turn, setTurn] = useState<PlatyerColors>(colorOne);
@@ -41,6 +42,8 @@ const Board = () => {
   });
   const [mandatoryMoves, setMandatoryMoves] = useState<IndicatorInfo[]>([]);
   const [movesPlayed, setMovesPlayed] = useState<Location[]>([]);
+
+  const navigate = useNavigate();
 
   const currentIndicatorLocations =
     mandatoryMoves.length > 0
@@ -222,7 +225,14 @@ const Board = () => {
     );
   }
 
-  return <div id="board">{rows.map((row) => row)}</div>;
+  return (
+    <div id="board">
+      <div className="log-out-of-game">
+        <button onClick={() => navigate("/gameOptions")}>quit game</button>
+      </div>
+      {rows.map((row) => row)}
+    </div>
+  );
 };
 
 export default Board;

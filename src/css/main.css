@@ -262,6 +262,33 @@ body {
   color: #0652dd;
 }
 
+.game-options-menu .stats-graph {
+  width: 180px;
+  height: 180px;
+}
+
+.scores-history {
+  position: absolute;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  justify-self: flex-start;
+  -ms-flex-item-align: start;
+      align-self: flex-start;
+  top: 100px;
+  border: 2px solid #3498db;
+  background-color: #ecf0f1;
+  width: 20%;
+}
+
+.scores-history h1 {
+  color: #535c68;
+}
+
 .game-info {
   position: absolute;
   left: 0;

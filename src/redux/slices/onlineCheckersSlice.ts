@@ -86,6 +86,7 @@ const onlineCheckersSlice = createSlice({
             : state.timers.playerTwo,
       },
     }),
+    cleanGame: (state, action) => initialState,
   },
 });
 
@@ -100,6 +101,7 @@ export const {
   removePlayer,
   setTimers,
   passSecond,
+  cleanGame,
 } = onlineCheckersSlice.actions;
 
 export default onlineCheckersSlice.reducer;

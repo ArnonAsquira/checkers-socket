@@ -55,7 +55,6 @@ const handleSocketLogic = (
     }
   );
   socket.on(incomingSocketEvents.newGameObject, (gameInfo: IGameInfo) => {
-    console.log(gameInfo);
     mainStore.dispatch(setGamePositions(gameInfo.positions));
     mainStore.dispatch(setIndicators(gameInfo.indicators));
     mainStore.dispatch(setSelectedPiece(gameInfo.selcetedPiece));
@@ -63,7 +62,6 @@ const handleSocketLogic = (
   });
 
   socket.on(incomingSocketEvents.playerDisconnected, (playerNum) => {
-    console.log(playerNum);
     alert("the other player has disconnected you have won the game");
     mainStore.dispatch(removePlayer(playerNum));
   });
@@ -82,8 +80,14 @@ const handleSocketLogic = (
     mainStore.dispatch(setTimers(timersData));
   });
 
-  socket.on(incomingSocketEvents.err, (err: string) => {
-    alert(err);
+  socket.on(incomingSocketEvents.err, (err: any) => {
+    console.log({ err });
+    if (typeof err === "string") {
+      if (err === "game does not exist") {
+        return;
+      }
+      return alert(err);
+    }
   });
 };
 

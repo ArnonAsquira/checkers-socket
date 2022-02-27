@@ -1,8 +1,8 @@
 type RequestMethod = "get" | "post" | "delete" | "put";
 
-interface IAxiosResponse {
+interface IAxiosResponse<T> {
   success: boolean;
-  data: any;
+  data: T;
 }
 
 interface IAXiosConfig {

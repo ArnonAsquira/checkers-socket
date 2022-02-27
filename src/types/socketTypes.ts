@@ -37,6 +37,19 @@ interface IPlayerTimers {
   playerOne: number | null;
   playerTwo: number | null;
 }
+interface IScoreData {
+  id: {
+    userName: string;
+  };
+  date: string;
+}
+
+interface IPlayersStats {
+  checkersData: {
+    wins: IScoreData[];
+    loses: IScoreData[];
+  };
+}
 
 export type {
   IGameToken,
@@ -46,4 +59,6 @@ export type {
   IGameInfo,
   ILogoutBody,
   IPlayerTimers,
+  IPlayersStats,
+  IScoreData,
 };

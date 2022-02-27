@@ -5,7 +5,7 @@ import {
   RequestMethod,
 } from "../types/axiosTypes";
 
-const makeAxiosRes = (success: boolean, data: any): IAxiosResponse => ({
+const makeAxiosRes = <T>(success: boolean, data: T): IAxiosResponse<T> => ({
   success,
   data,
 });
@@ -14,13 +14,13 @@ const parseErr = (err: any) => {
   return err && err.response && err.response.data;
 };
 
-const fetchApi = async (
+const fetchApi = async <T>(
   url: string,
   path: string,
   method: RequestMethod,
   config?: IAXiosConfig,
   payload?: any
-): Promise<IAxiosResponse> => {
+): Promise<IAxiosResponse<T>> => {
   try {
     const { data } =
       method === "get"
