@@ -83,6 +83,7 @@ const handleSocketLogic = (
 
   socket.on(incomingSocketEvents.updateTime, (timersData: IPlayerTimers) => {
     mainStore.dispatch(setTimers(timersData));
+    console.log("timer updated");
   });
 
   socket.on(incomingSocketEvents.message, (messageObj: IMessageObj) => {
