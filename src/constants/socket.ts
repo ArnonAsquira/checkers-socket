@@ -1,4 +1,6 @@
-const socketApiBaseUrl = "http://localhost:8081";
+import * as config from "../utils/environmentVars";
+
+const socketApiBaseUrl = config.socketApiBaseUrl;
 
 const incomingSocketEvents = {
   playerDisconnected: "player disconnected",

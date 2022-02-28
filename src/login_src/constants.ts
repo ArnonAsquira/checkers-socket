@@ -1,3 +1,5 @@
-const baseUrl = "http://localhost:8080";
+import * as config from "../utils/environmentVars";
+
+const baseUrl = config.BASEURL;
 
 export { baseUrl };

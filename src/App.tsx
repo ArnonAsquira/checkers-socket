@@ -17,14 +17,12 @@ import axios from "axios";
 import { socketApiBaseUrl } from "./constants/socket";
 import { authAxiosConfig } from "./constants/axios";
 import { setUserId } from "./redux/slices/socketSlice";
-import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
 
 const App = () => {
   const navigate = useNavigate();
   const mainStore = useStore();
   const socketSlice = useSelector((state: MainStore) => state.socket);
   const userId = socketSlice.userId;
-  const historySlice = useSelector((state: MainStore) => state.history);
 
   useEffect(() => {
     const establishJwtLogin = async () => {
