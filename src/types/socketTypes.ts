@@ -56,6 +56,14 @@ interface IMessageObj {
   content: string;
 }
 
+type BackgroundTypes = "dark" | "checkered" | "camo" | "light";
+type LogoTypes = "smily" | "angry" | "cool" | "nerd" | null;
+
+interface ICostumizationData {
+  background: BackgroundTypes;
+  logo: LogoTypes;
+}
+
 export type {
   IGameToken,
   IJoinGameBody,
@@ -67,4 +75,7 @@ export type {
   IPlayersStats,
   IScoreData,
   IMessageObj,
+  ICostumizationData,
+  BackgroundTypes,
+  LogoTypes,
 };

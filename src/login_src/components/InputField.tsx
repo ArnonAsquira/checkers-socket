@@ -9,7 +9,6 @@ import { SignUpValues } from "../types/signUpTypes";
 import { useNavigate } from "react-router-dom";
 import { playMenuPath } from "../constants/appPaths";
 import { useStore } from "react-redux";
-import { v4 as uuidv4 } from "uuid";
 import { setUserId } from "../../redux/slices/socketSlice";
 import axios from "axios";
 
@@ -56,19 +55,19 @@ export default function InputField() {
 
   return (
     <div className="input-field-container">
-      <h1>Login Or Sign Up</h1>
+      <h1>Log In Or Sign Up</h1>
       <div className="login-buttons-div">
         <button className="login-button" onClick={(e) => switchForms(true)}>
-          Log-In
+          Log In
         </button>
-        <button onClick={() => switchForms(false)}>Sign-Up</button>
+        <button onClick={() => switchForms(false)}>Sign Up</button>
       </div>
       <div id="SignUp">
         <div hidden={loginState}>
           <TextInput
             id="new-userName-input"
             type="text"
-            label="enter userName"
+            label="user name"
             name="userName"
             value={signUpInputValues.userName}
             handleInputChange={(e) => signHandleInputChange(e.target)}
@@ -77,7 +76,7 @@ export default function InputField() {
         <TextInput
           id="new-email-input"
           type="email"
-          label="enter email"
+          label="email"
           name="email"
           value={loginState ? LoginInputValues.email : signUpInputValues.email}
           handleInputChange={(e) =>
@@ -89,7 +88,7 @@ export default function InputField() {
         <TextInput
           id="new-password-input"
           type="password"
-          label="enter password"
+          label="password    "
           name="password"
           value={
             loginState ? LoginInputValues.password : signUpInputValues.password
@@ -111,7 +110,7 @@ export default function InputField() {
           Submit
         </button>
         <button className="guest-button" onClick={handleGuestLoging}>
-          login as guest
+          Login As Guest
         </button>
       </div>
     </div>

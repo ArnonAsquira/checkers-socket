@@ -22,8 +22,11 @@ import { cleanGame } from "../../redux/slices/onlineCheckersSlice";
 import ChatDialog from "./chat/ChatDialog";
 import { resetChat } from "../../redux/slices/chatSlice";
 import { gameOptionsPath } from "../../login_src/constants/appPaths";
+import AlertDialog from "../customAlert/AlertDialog";
+import { setAlert, removeAlert } from "../../redux/slices/customAlertsSlice";
 
 const OnlineBoard = () => {
+  const alertSlice = useSelector((state: MainStore) => state.alerts);
   const socketSlice = useSelector((state: MainStore) => state.socket);
   const gamaSlice = useSelector(
     (state: MainStore) => state.onlineCheckersBoard
@@ -48,14 +51,33 @@ const OnlineBoard = () => {
 
   const takeTurn = (indicator: IndicatorInfo) => {
     if (!isYourTurn()) {
-      return alert("this is not your turn");
+      return mainStore.dispatch(
+        setAlert(
+          <AlertDialog
+            title="error"
+            content="this is not your turn"
+            type="err"
+            close={() => mainStore.dispatch(removeAlert())}
+          />
+        )
+      );
     }
     takeTurnSocket(indicator);
   };
 
   const setSelectedPiece = (piece: IPieceInfoObject) => {
     if (!isYourTurn()) {
-      return alert("this is not your turn");
+      mainStore.dispatch(
+        setAlert(
+          <AlertDialog
+            title="error"
+            content="this is not your turn"
+            type="err"
+            close={() => mainStore.dispatch(removeAlert())}
+          />
+        )
+      );
+      return null;
     }
     selectPiece(piece);
   };
@@ -92,7 +114,16 @@ const OnlineBoard = () => {
     } catch (err: any) {
       const parsedErr = err && err.response && err.response.data;
       if (parsedErr !== "game does not exist") {
-        alert(parsedErr);
+        return mainStore.dispatch(
+          setAlert(
+            <AlertDialog
+              title="error"
+              content={parsedErr}
+              type="err"
+              close={() => mainStore.dispatch(removeAlert())}
+            />
+          )
+        );
       }
     }
   };
@@ -149,7 +180,16 @@ const OnlineBoard = () => {
                   arrayEqual(indicator.location, e)
                 );
                 if (!indicator) {
-                  return alert("indicator not found");
+                  return mainStore.dispatch(
+                    setAlert(
+                      <AlertDialog
+                        title="error"
+                        content="no indicators"
+                        type="err"
+                        close={() => mainStore.dispatch(removeAlert())}
+                      />
+                    )
+                  );
                 }
                 takeTurn(indicator);
               }}
@@ -166,6 +206,7 @@ const OnlineBoard = () => {
         <button onClick={handleQuitGame}>quit game</button>
         <ChatDialog gameId={socketSlice.gameToken} />
       </div>
+      {alertSlice.alert ? alertSlice.alert : null}
       <GameInfo timers={timers} players={players} currentTurn={currentTurn} />
       <div id="board">{rows.map((row) => row)}</div>
     </Fragment>

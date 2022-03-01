@@ -1,12 +1,20 @@
 import { useNavigate } from "react-router-dom";
-import { offlineGamePath, onlineChckersPath } from "../constants/appPaths";
+import {
+  customizePath,
+  offlineGamePath,
+  onlineChckersPath,
+} from "../constants/appPaths";
 import { socketApiBaseUrl } from "../constants/socket";
 import { useSelector, useStore } from "react-redux";
 import { MainStore } from "../redux/mainStore";
 import { joinedGame, setGameToken } from "../redux/slices/socketSlice";
-import { IGameToken, INewGameResponse } from "../types/socketTypes";
+import {
+  ICostumizationData,
+  IGameToken,
+  INewGameResponse,
+} from "../types/socketTypes";
 import axios from "axios";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
   setGamePlayers,
   setGamePositions,
@@ -18,15 +26,42 @@ import { colorOne, colorTwo } from "../constants/board";
 import { joinSocketGame } from "../socketLogic/initialConnection";
 import { authAxiosConfig } from "../constants/axios";
 import StatisticsView from "./statistics/StatsMainScreen";
+import fetchApi from "../generalUtils/axios";
+import { backgroundDict } from "../constants/customizationDict";
+import { setBackground } from "../redux/slices/environmentCustomizationSlice";
 
 const GameOptions = () => {
   const socketSlice = useSelector((state: MainStore) => state.socket);
   const gameToken = socketSlice.gameToken;
   const userId = socketSlice.userId;
+  const costumizationSlice = useSelector(
+    (state: MainStore) => state.customization
+  );
+  const backgroundSetting = costumizationSlice.background;
   const mainStore = useStore();
   const navigate = useNavigate();
 
   const tokenRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const updateUserCustomization = async () => {
+      const customizeDataRes = await fetchApi<{
+        styleCustomization: ICostumizationData;
+      }>(socketApiBaseUrl, "customize", "get", authAxiosConfig());
+      if (!customizeDataRes.success) {
+        return;
+      }
+      mainStore.dispatch(
+        setBackground(customizeDataRes.data.styleCustomization.background)
+      );
+    };
+    updateUserCustomization();
+  }, [userId]);
+
+  useEffect(() => {
+    const rootElement = document.getElementById("root") as HTMLElement;
+    rootElement.style.backgroundImage = `url('${backgroundDict[backgroundSetting]}')`;
+  }, [backgroundSetting]);
 
   const handleOnlineGameCreation = async () => {
     try {
@@ -132,6 +167,11 @@ const GameOptions = () => {
             game token <span>{gameToken}</span>
           </div>
         ) : null}
+        <div className="go-to-customize">
+          <button onClick={() => navigate(customizePath)}>
+            customize environment
+          </button>
+        </div>
       </div>
     </div>
   );

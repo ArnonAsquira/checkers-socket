@@ -8,6 +8,7 @@ import {
   offlineGamePath,
   onlineChckersPath,
   playMenuPath,
+  customizePath,
 } from "./constants/appPaths";
 import OnlineBoard from "./componentes/onlineBoard/Board";
 import { useSelector, useStore } from "react-redux";
@@ -17,6 +18,7 @@ import axios from "axios";
 import { socketApiBaseUrl } from "./constants/socket";
 import { authAxiosConfig } from "./constants/axios";
 import { setUserId } from "./redux/slices/socketSlice";
+import CustomizeScreen from "./componentes/customizeSection/CustomizeScreen";
 
 const App = () => {
   const navigate = useNavigate();
@@ -52,6 +54,7 @@ const App = () => {
       <Route path="/" element={<SignUpApp />} />
       <Route path={playMenuPath} element={<PlayMenu />} />
       <Route path={gameOptionsPath} element={<GameOptions />} />
+      <Route path={customizePath} element={<CustomizeScreen />} />
       <Route
         path={offlineGamePath}
         element={

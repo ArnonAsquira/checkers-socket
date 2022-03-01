@@ -1,8 +1,16 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@200&display=swap");
 
 body {
-  background: #f6e58d;
+  background-color: #34495e;
   font-family: "Roboto Serif", sans-serif;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 @mixin button($primColor, $hoverColor, $textColor) {
@@ -71,7 +79,7 @@ body {
 }
 
 .input-field-container {
-  width: 80vw;
+  width: 60vw;
   height: 80vh;
   margin: 4.5% auto;
   background-color: #535c68;
@@ -146,6 +154,14 @@ body {
     width: 180px;
     height: 180px;
   }
+  .go-to-customize {
+    position: absolute;
+    top: 10%;
+    right: 10%;
+    button {
+      @include button(white, #3498db, black);
+    }
+  }
 }
 .scores-history {
   position: absolute;
@@ -156,7 +172,9 @@ body {
   top: 100px;
   border: 2px solid #3498db;
   background-color: #ecf0f1;
-  width: 20%;
+  width: 20vw;
+  max-height: 50vh;
+  overflow-y: scroll;
   h1 {
     color: #535c68;
   }
@@ -228,4 +246,68 @@ body {
   padding: 20%;
   left: 0;
   top: 100%;
+}
+
+.custom-alert {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10%;
+  width: 30vw;
+  height: 30vh;
+  background-image: url("/src/assets/checkers-background.jpg");
+  color: darkred;
+  border-radius: 2%;
+  div {
+    background-color: #0097e6;
+    border-radius: 2%;
+    h2 {
+      background-color: #0097e6;
+    }
+  }
+  img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  button {
+    @include button("red", "violet", "white");
+  }
+}
+
+.customizee-screen {
+  h1 {
+    text-align: center;
+  }
+  .selectors-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 40vh;
+    button {
+      @include button(#2ecc71, #27ae60, white);
+      padding: 1% 2%;
+    }
+  }
+  .go-back-button {
+    @include button(#e74c3c, red, white);
+    padding: 1% 2%;
+  }
+}
+
+.generic-selector-div {
+  select {
+    outline: none;
+    border: none;
+    min-height: 10px;
+    font-family: inherit;
+    padding: 0.25%;
+    background-color: #3498db;
+    transition: 0.75s;
+    &:focus {
+      background-color: #1289a7;
+    }
+  }
 }

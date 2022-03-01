@@ -16,7 +16,7 @@ import {
 } from "./utils/boardBuild";
 import { indicatorLocations, oppositeColor } from "./utils/boardUtils";
 import { adjacentPieces } from "./utils/mandatoryMoves";
-import { colorOne, colorTwo } from "../constants/board";
+import { colorOne } from "../constants/board";
 import { useNavigate } from "react-router-dom";
 
 const Board = () => {

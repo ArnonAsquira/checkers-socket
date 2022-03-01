@@ -1,7 +1,15 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@200&display=swap");
 body {
-  background: #f6e58d;
+  background-color: #34495e;
   font-family: "Roboto Serif", sans-serif;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 #board {
@@ -80,7 +88,7 @@ body {
 }
 
 .input-field-container {
-  width: 80vw;
+  width: 60vw;
   height: 80vh;
   margin: 4.5% auto;
   background-color: #535c68;
@@ -275,6 +283,31 @@ body {
   height: 180px;
 }
 
+.game-options-menu .go-to-customize {
+  position: absolute;
+  top: 10%;
+  right: 10%;
+}
+
+.game-options-menu .go-to-customize button {
+  background-color: white;
+  color: black;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  border-radius: 2%;
+  border: none;
+  outline: none;
+  padding: 5% 15%;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.game-options-menu .go-to-customize button:hover {
+  background-color: #3498db;
+}
+
 .scores-history {
   position: absolute;
   display: -webkit-box;
@@ -290,7 +323,9 @@ body {
   top: 100px;
   border: 2px solid #3498db;
   background-color: #ecf0f1;
-  width: 20%;
+  width: 20vw;
+  max-height: 50vh;
+  overflow-y: scroll;
 }
 
 .scores-history h1 {
@@ -396,5 +431,130 @@ body {
   padding: 20%;
   left: 0;
   top: 100%;
+}
+
+.custom-alert {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  position: fixed;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10%;
+  width: 30vw;
+  height: 30vh;
+  background-image: url("/src/assets/checkers-background.jpg");
+  color: darkred;
+  border-radius: 2%;
+}
+
+.custom-alert div {
+  background-color: #0097e6;
+  border-radius: 2%;
+}
+
+.custom-alert div h2 {
+  background-color: #0097e6;
+}
+
+.custom-alert img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.custom-alert button {
+  background-color: "red";
+  color: "white";
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  border-radius: 2%;
+  border: none;
+  outline: none;
+  padding: 5% 15%;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.custom-alert button:hover {
+  background-color: "violet";
+}
+
+.customizee-screen h1 {
+  text-align: center;
+}
+
+.customizee-screen .selectors-div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  height: 40vh;
+}
+
+.customizee-screen .selectors-div button {
+  background-color: #2ecc71;
+  color: white;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  border-radius: 2%;
+  border: none;
+  outline: none;
+  padding: 5% 15%;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 1% 2%;
+}
+
+.customizee-screen .selectors-div button:hover {
+  background-color: #27ae60;
+}
+
+.customizee-screen .go-back-button {
+  background-color: #e74c3c;
+  color: white;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  border-radius: 2%;
+  border: none;
+  outline: none;
+  padding: 5% 15%;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 1% 2%;
+}
+
+.customizee-screen .go-back-button:hover {
+  background-color: red;
+}
+
+.generic-selector-div select {
+  outline: none;
+  border: none;
+  min-height: 10px;
+  font-family: inherit;
+  padding: 0.25%;
+  background-color: #3498db;
+  -webkit-transition: 0.75s;
+  transition: 0.75s;
+}
+
+.generic-selector-div select:focus {
+  background-color: #1289a7;
 }
 /*# sourceMappingURL=main.css.map */

@@ -12,9 +12,16 @@ interface PropsForTextInput {
 
 export default function TextInput(props: PropsForTextInput) {
   return (
-    <form>
+    <form
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+      }}
+    >
       <label htmlFor={props.id}>{props.label}</label>
       <input
+        style={{ minHeight: "25px" }}
         id={props.id}
         type={props.type}
         value={props.value}
