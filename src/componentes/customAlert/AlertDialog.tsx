@@ -46,7 +46,8 @@ const AlertDialog: FC<IAlertDialogProps> = ({
         {content}
       </div>
       <span>{logoDict[type]}</span>
-      <button onClick={() => close(null)}>close</button>
+      <button onClick={() => close(null)}>cancel</button>
+      confirm
     </dialog>
   );
 };

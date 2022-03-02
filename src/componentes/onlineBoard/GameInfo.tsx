@@ -1,4 +1,6 @@
 import { FC } from "react";
+import { useSelector } from "react-redux";
+import { MainStore } from "../../redux/mainStore";
 import { PlatyerColors } from "../../types/boardTypes";
 import { IActiveGamePlayers, IPlayerTimers } from "../../types/socketTypes";
 
@@ -9,6 +11,8 @@ interface IGameInfoProps {
 }
 
 const GameInfo: FC<IGameInfoProps> = ({ currentTurn, players, timers }) => {
+  const socketSlice = useSelector((state: MainStore) => state.socket);
+
   const secondsToMinutes = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
     return `${minutes} : ${seconds - minutes * 60}`;
@@ -16,6 +20,7 @@ const GameInfo: FC<IGameInfoProps> = ({ currentTurn, players, timers }) => {
 
   return (
     <div className="game-info">
+      <div>game token: {socketSlice.gameToken}</div>
       <div className="current-turn">
         current turn:
         <span style={currentTurn !== null ? { color: currentTurn } : {}}>

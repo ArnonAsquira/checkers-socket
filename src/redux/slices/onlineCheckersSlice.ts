@@ -5,7 +5,11 @@ import {
   IPieceInfoObject,
   PlatyerColors,
 } from "../../types/boardTypes";
-import { IActiveGamePlayers, IPlayerTimers } from "../../types/socketTypes";
+import {
+  IActiveGamePlayers,
+  IPlayerTimers,
+  LogoTypes,
+} from "../../types/socketTypes";
 
 interface IOnlineCheckersSlice {
   players: IActiveGamePlayers;
@@ -15,6 +19,10 @@ interface IOnlineCheckersSlice {
   indicators: IndicatorInfo[];
   selectedPiece: IPieceInfoObject | null;
   timers: IPlayerTimers;
+  logos: {
+    red: LogoTypes;
+    blue: LogoTypes;
+  };
 }
 
 const initialState: IOnlineCheckersSlice = {
@@ -25,6 +33,10 @@ const initialState: IOnlineCheckersSlice = {
   players: { playerOne: "", playerTwo: "" },
   selectedPiece: null,
   timers: { playerOne: null, playerTwo: null },
+  logos: {
+    red: null,
+    blue: null,
+  },
 };
 
 const onlineCheckersSlice = createSlice({
@@ -86,6 +98,16 @@ const onlineCheckersSlice = createSlice({
             : state.timers.playerTwo,
       },
     }),
+    setLogo: (
+      state,
+      action: PayloadAction<{ player: 1 | 2; logo: LogoTypes }>
+    ) => {
+      if (action.payload.player === 1) {
+        state.logos.red = action.payload.logo;
+      } else {
+        state.logos.blue = action.payload.logo;
+      }
+    },
     cleanGame: (state, action) => initialState,
   },
 });
@@ -102,6 +124,7 @@ export const {
   setTimers,
   passSecond,
   cleanGame,
+  setLogo,
 } = onlineCheckersSlice.actions;
 
 export default onlineCheckersSlice.reducer;

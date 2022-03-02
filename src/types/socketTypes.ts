@@ -16,8 +16,13 @@ interface IJoinGameBody {
 type ILogoutBody = IJoinGameBody;
 
 interface INewGameResponse {
-  playerOne: { userName: string; id?: string; time: number } | null;
-  playerTwo: { userName: string; time: number } | null;
+  playerOne: {
+    userName: string;
+    id?: string;
+    time: number;
+    logo: LogoTypes;
+  } | null;
+  playerTwo: { userName: string; time: number; logo: LogoTypes } | null;
   gameId: string;
   gameinfo: IGameInfo;
 }

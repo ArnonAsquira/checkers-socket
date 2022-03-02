@@ -22,11 +22,9 @@ import { cleanGame } from "../../redux/slices/onlineCheckersSlice";
 import ChatDialog from "./chat/ChatDialog";
 import { resetChat } from "../../redux/slices/chatSlice";
 import { gameOptionsPath } from "../../login_src/constants/appPaths";
-import AlertDialog from "../customAlert/AlertDialog";
-import { setAlert, removeAlert } from "../../redux/slices/customAlertsSlice";
+import Swal from "sweetalert2";
 
 const OnlineBoard = () => {
-  const alertSlice = useSelector((state: MainStore) => state.alerts);
   const socketSlice = useSelector((state: MainStore) => state.socket);
   const gamaSlice = useSelector(
     (state: MainStore) => state.onlineCheckersBoard
@@ -51,32 +49,14 @@ const OnlineBoard = () => {
 
   const takeTurn = (indicator: IndicatorInfo) => {
     if (!isYourTurn()) {
-      return mainStore.dispatch(
-        setAlert(
-          <AlertDialog
-            title="error"
-            content="this is not your turn"
-            type="err"
-            close={() => mainStore.dispatch(removeAlert())}
-          />
-        )
-      );
+      return Swal.fire({ icon: "error", text: "this is not your turn " });
     }
     takeTurnSocket(indicator);
   };
 
   const setSelectedPiece = (piece: IPieceInfoObject) => {
     if (!isYourTurn()) {
-      mainStore.dispatch(
-        setAlert(
-          <AlertDialog
-            title="error"
-            content="this is not your turn"
-            type="err"
-            close={() => mainStore.dispatch(removeAlert())}
-          />
-        )
-      );
+      Swal.fire({ icon: "error", text: "this is not your turn" });
       return null;
     }
     selectPiece(piece);
@@ -96,9 +76,10 @@ const OnlineBoard = () => {
           authAxiosConfig()
         );
       }
-      const playerIsSure = window.confirm(
-        "are you sure you want to quit and lose the game"
-      );
+      // const playerIsSure = window.confirm(
+      //   "are you sure you want to quit and lose the game"
+      // );
+      const playerIsSure = true;
       if (!playerIsSure) return;
       await axios.post(
         `${socketApiBaseUrl}/game/logout`,
@@ -114,16 +95,7 @@ const OnlineBoard = () => {
     } catch (err: any) {
       const parsedErr = err && err.response && err.response.data;
       if (parsedErr !== "game does not exist") {
-        return mainStore.dispatch(
-          setAlert(
-            <AlertDialog
-              title="error"
-              content={parsedErr}
-              type="err"
-              close={() => mainStore.dispatch(removeAlert())}
-            />
-          )
-        );
+        return Swal.fire({ icon: "error", text: parsedErr });
       }
     }
   };
@@ -180,16 +152,7 @@ const OnlineBoard = () => {
                   arrayEqual(indicator.location, e)
                 );
                 if (!indicator) {
-                  return mainStore.dispatch(
-                    setAlert(
-                      <AlertDialog
-                        title="error"
-                        content="no indicators"
-                        type="err"
-                        close={() => mainStore.dispatch(removeAlert())}
-                      />
-                    )
-                  );
+                  return Swal.fire({ icon: "error", text: "no indicators" });
                 }
                 takeTurn(indicator);
               }}
@@ -206,7 +169,6 @@ const OnlineBoard = () => {
         <button onClick={handleQuitGame}>quit game</button>
         <ChatDialog gameId={socketSlice.gameToken} />
       </div>
-      {alertSlice.alert ? alertSlice.alert : null}
       <GameInfo timers={timers} players={players} currentTurn={currentTurn} />
       <div id="board">{rows.map((row) => row)}</div>
     </Fragment>

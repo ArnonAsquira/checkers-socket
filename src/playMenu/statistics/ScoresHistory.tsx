@@ -10,15 +10,18 @@ const ScoresHistory: FC<IScoresHistoryProps> = ({ stats }) => {
   const scoresList = createScoreList(stats);
   return (
     <div className="scores-history">
-      <h1>games played: {scoresList.length}</h1>
+      <h2>games played: {scoresList.length}</h2>
       {scoresList.map((score) => (
         <div
           className="single-score"
-          style={{ color: score.win ? "green" : "red" }}
+          style={{
+            color: score.win ? "green" : "red",
+            borderBottom: "1px solid black",
+          }}
         >
           <span style={{ fontWeight: 600 }}>{score.win ? "won" : "lost"}</span>{" "}
           against <span style={{ fontWeight: 600 }}>{score.id.userName} </span>
-          at {score.date.slice(0, 19)}
+          {/* at {score.date.slice(3, 19)} */}
         </div>
       ))}
     </div>

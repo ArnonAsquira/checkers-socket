@@ -1,9 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-  BackgroundTypes,
-  ICostumizationData,
-  LogoTypes,
-} from "../../types/socketTypes";
+import { BackgroundTypes, ICostumizationData } from "../../types/socketTypes";
 
 const initialState: ICostumizationData = {
   background: "dark",
@@ -17,11 +13,8 @@ const environemntCostumizationSlice = createSlice({
     setBackground: (state, action: PayloadAction<BackgroundTypes>) => {
       state.background = action.payload;
     },
-    setLogo: (state, action: PayloadAction<LogoTypes>) => {
-      state.logo = action.payload;
-    },
   },
 });
 
-export const { setBackground, setLogo } = environemntCostumizationSlice.actions;
+export const { setBackground } = environemntCostumizationSlice.actions;
 export default environemntCostumizationSlice.reducer;

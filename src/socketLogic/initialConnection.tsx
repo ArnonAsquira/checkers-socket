@@ -12,16 +12,23 @@ import {
   removePlayer,
   setGamePositions,
   setIndicators,
+  setLogo,
   setSelectedPiece,
   setTimers,
   setTurn,
 } from "../redux/slices/onlineCheckersSlice";
 import { setGameToken, setIoConnection } from "../redux/slices/socketSlice";
 import { IndicatorInfo, IPieceInfoObject } from "../types/boardTypes";
-import { IGameInfo, IMessageObj, IPlayerTimers } from "../types/socketTypes";
+import {
+  IGameInfo,
+  IMessageObj,
+  IPlayerTimers,
+  LogoTypes,
+} from "../types/socketTypes";
 import { handleNewMessage } from "./utils/chat";
 import { removeAlert, setAlert } from "../redux/slices/customAlertsSlice";
 import AlertDialog from "../componentes/customAlert/AlertDialog";
+import Swal from "sweetalert2";
 
 const makeSocketConnection = (url: string) => {
   const socket = io(url, {
@@ -41,18 +48,22 @@ const joinSocketGame = (gameId: string, userId: string) => {
 const handleSocketLogic = (
   socket: Socket<DefaultEventsMap, DefaultEventsMap>
 ) => {
-  socket.on(incomingSocketEvents.joinedGame, (userId: string, time: number) => {
-    if (typeof userId !== "string") {
-      return;
+  socket.on(
+    incomingSocketEvents.joinedGame,
+    (userId: string, time: number, logo: LogoTypes) => {
+      if (typeof userId !== "string") {
+        return;
+      }
+      mainStore.dispatch(addPlayer(userId));
+      mainStore.dispatch(
+        setTimers({
+          ...mainStore.getState().onlineCheckersBoard.timers,
+          playerTwo: time,
+        })
+      );
+      mainStore.dispatch(setLogo({ player: 2, logo }));
     }
-    mainStore.dispatch(addPlayer(userId));
-    mainStore.dispatch(
-      setTimers({
-        ...mainStore.getState().onlineCheckersBoard.timers,
-        playerTwo: time,
-      })
-    );
-  });
+  );
   socket.on(
     incomingSocketEvents.indicators,
     (indicators: IndicatorInfo[], selectedPiece: IPieceInfoObject) => {
@@ -68,44 +79,17 @@ const handleSocketLogic = (
   });
 
   socket.on(incomingSocketEvents.playerDisconnected, (playerNum) => {
-    mainStore.dispatch(
-      setAlert(
-        <AlertDialog
-          title="Victory"
-          content="the other player has disconneted you have won the game"
-          type="success"
-          close={() => mainStore.dispatch(removeAlert())}
-        />
-      )
-    );
+    Swal.fire("player disconnected you have won the game");
     mainStore.dispatch(removePlayer(playerNum));
   });
 
   socket.on(incomingSocketEvents.winner, (playerNum) => {
-    mainStore.dispatch(
-      setAlert(
-        <AlertDialog
-          title="Victory"
-          content="you have won the game"
-          type="success"
-          close={() => mainStore.dispatch(removeAlert())}
-        />
-      )
-    );
+    Swal.fire("you have won the game");
     mainStore.dispatch(removePlayer(playerNum));
   });
 
   socket.on(incomingSocketEvents.loser, (playerNum) => {
-    mainStore.dispatch(
-      setAlert(
-        <AlertDialog
-          title="Lose"
-          content="you have lost the game"
-          type="err"
-          close={() => mainStore.dispatch(removeAlert())}
-        />
-      )
-    );
+    Swal.fire("you have lost the game");
     mainStore.dispatch(removePlayer(playerNum));
   });
 
@@ -122,16 +106,7 @@ const handleSocketLogic = (
       if (err === "game does not exist") {
         return;
       }
-      return mainStore.dispatch(
-        setAlert(
-          <AlertDialog
-            type="err"
-            content={err}
-            title="error"
-            close={() => mainStore.dispatch(removeAlert())}
-          />
-        )
-      );
+      Swal.fire(err);
     }
   });
 };

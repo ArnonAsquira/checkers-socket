@@ -172,7 +172,7 @@ const Board = () => {
   const rows = [];
   for (let i = 0; i < quardinatnts.length; i += amountOfRows) {
     rows.push(
-      <div>
+      <div style={{ minHeight: "50px" }}>
         {quardinatnts.slice(i, i + amountOfRows).map((location) => {
           return (
             <BoardSqaure

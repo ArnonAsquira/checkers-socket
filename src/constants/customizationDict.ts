@@ -1,9 +1,17 @@
 const backgroundDict = {
-  dark: "http://localhost:3000/static/media/black-brick-wall-textured-background_53876-63572.a417b0cd185161f91ac9.webp",
-  checkered: "http://localhost:3000/static/media/checkers-background.jpg",
-  camo: "http://localhost:3000/static/media/Blue-Camouflage-background.6e2f42948994293139be.jpg",
+  dark: "https://cdn.wallpapersafari.com/14/75/mbXTIn.jpg",
+  checkered:
+    "https://static6.depositphotos.com/1006065/577/v/450/depositphotos_5771789-stock-illustration-checker-board.jpg",
+  camo: "https://besthqwallpapers.com/Uploads/20-11-2020/145868/thumb2-gray-camouflage-4k-military-camouflage-gray-camouflage-background-camouflage-pattern.jpg",
   light:
-    "http://localhost:3000/static/media/light-background.e392a8805ed422a309cd.jpg",
+    "https://thumbs.dreamstime.com/z/scratched-grunge-horizontal-recycled-note-paper-texture-light-background-scratched-grunge-horizontal-recycled-note-paper-texture-127626487.jpg",
 };
 
-export { backgroundDict };
+const logosDict = {
+  smily: "😀",
+  angry: "😡",
+  cool: "😎",
+  nerd: "🤓",
+};
+
+export { backgroundDict, logosDict };

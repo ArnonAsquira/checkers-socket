@@ -6,6 +6,7 @@ interface PlayerProps {
   isSelectedPiece: boolean;
   handlePieceClick: (location: Location, player: "red" | "blue") => void;
   isQueen: boolean;
+  logo?: string | null;
 }
 
 const player = ({
@@ -14,10 +15,12 @@ const player = ({
   isSelectedPiece,
   handlePieceClick,
   isQueen,
+  logo,
 }: PlayerProps) => {
   return (
     <div
       style={{
+        display: "flex",
         border: isSelectedPiece ? "2px solid gold" : "none",
         justifyContent: "center",
       }}
@@ -33,6 +36,16 @@ const player = ({
           alt="queen"
           src="https://upload.wikimedia.org/wikipedia/commons/9/90/Font_Awesome_5_solid_crown.svg"
         />
+      ) : logo ? (
+        <span
+          style={{
+            fontSize: "3rem",
+            marginRight: "auto",
+            marginLeft: "auto",
+          }}
+        >
+          {logo}
+        </span>
       ) : null}
     </div>
   );
