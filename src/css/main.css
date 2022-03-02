@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@200&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
 body {
   background-color: #34495e;
   font-family: "Roboto Serif", sans-serif;
@@ -53,9 +54,8 @@ body {
 }
 
 #board div div {
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
+  width: 7.5vw;
+  height: 10vh;
 }
 
 .dark {
@@ -347,8 +347,8 @@ body {
   left: 0;
   top: 0;
   width: 20vw;
-  height: 30vh;
-  background-color: #535c68;
+  height: 40vh;
+  background-color: #5a6470;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -359,6 +359,10 @@ body {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+}
+
+.game-info .player {
+  margin-top: 10%;
 }
 
 .game-info .player .one {
@@ -574,5 +578,17 @@ body {
 
 .generic-selector-div select:focus {
   background-color: #1289a7;
+}
+
+.timer {
+  padding: 5px;
+  border: 1px solid black;
+  background-color: #34495e;
+  color: #2ecc71;
+  font-weight: 600;
+  font-family: "VT323", monospace;
+  width: 100px;
+  text-align: center;
+  font-size: larger;
 }
 /*# sourceMappingURL=main.css.map */

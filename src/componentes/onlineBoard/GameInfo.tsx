@@ -30,15 +30,15 @@ const GameInfo: FC<IGameInfoProps> = ({ currentTurn, players, timers }) => {
       <div className="player">
         <span className="one">player one:</span>
         {players.playerOne}{" "}
-        <div>
-          time left: {timers.playerOne && secondsToMinutes(timers.playerOne)}
+        <div className="timer">
+          {timers.playerOne && secondsToMinutes(timers.playerOne)}
         </div>
       </div>
       <div className="player">
         <span className="two">player two:</span>
         {players.playerTwo}
-        <div>
-          time left: {timers.playerTwo && secondsToMinutes(timers.playerTwo)}
+        <div className="timer">
+          {timers.playerTwo && secondsToMinutes(timers.playerTwo)}
         </div>
       </div>
     </div>

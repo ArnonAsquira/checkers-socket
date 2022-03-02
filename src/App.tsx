@@ -19,6 +19,7 @@ import { socketApiBaseUrl } from "./constants/socket";
 import { authAxiosConfig } from "./constants/axios";
 import { setUserId } from "./redux/slices/socketSlice";
 import CustomizeScreen from "./componentes/customizeSection/CustomizeScreen";
+import { makeSocketConnection } from "./socketLogic/initialConnection";
 
 const App = () => {
   const navigate = useNavigate();
@@ -46,6 +47,7 @@ const App = () => {
   useEffect(() => {
     if (userId === null) {
       navigate("/");
+      makeSocketConnection(socketApiBaseUrl);
     }
   }, [userId]);
 

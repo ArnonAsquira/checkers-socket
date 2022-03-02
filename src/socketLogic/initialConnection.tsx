@@ -26,8 +26,6 @@ import {
   LogoTypes,
 } from "../types/socketTypes";
 import { handleNewMessage } from "./utils/chat";
-import { removeAlert, setAlert } from "../redux/slices/customAlertsSlice";
-import AlertDialog from "../componentes/customAlert/AlertDialog";
 import Swal from "sweetalert2";
 
 const makeSocketConnection = (url: string) => {
@@ -35,14 +33,19 @@ const makeSocketConnection = (url: string) => {
     auth: { token: authAxiosConfig().headers.authorization },
   });
   mainStore.dispatch(setIoConnection(socket));
+  handleSocketLogic(socket);
   return socket;
 };
 
 const joinSocketGame = (gameId: string, userId: string) => {
   mainStore.dispatch(setGameToken(gameId));
-  const socket = makeSocketConnection(socketApiBaseUrl);
+  // const socket = makeSocketConnection(socketApiBaseUrl);
+  const socket = mainStore.getState().socket.ioConnection;
+  if (!socket) {
+    console.log("no socket connection");
+    return;
+  }
   socket.emit(outGoingSocketEvents.joinGame, gameId, userId);
-  handleSocketLogic(socket);
 };
 
 const handleSocketLogic = (
@@ -99,6 +102,11 @@ const handleSocketLogic = (
 
   socket.on(incomingSocketEvents.message, (messageObj: IMessageObj) => {
     handleNewMessage(messageObj);
+  });
+
+  socket.on("invited", (gameToken: string, userName: string) => {
+    console.log("invited to game");
+    Swal.fire(`you were invited to game ${gameToken} by ${userName}`);
   });
 
   socket.on(incomingSocketEvents.err, (err: any) => {

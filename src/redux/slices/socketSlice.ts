@@ -24,6 +24,9 @@ const socketSlice = createSlice({
       ...state,
       gameToken: action.payload,
     }),
+    removeGameToken: (state) => {
+      state.gameToken = null;
+    },
     setIoConnection: (
       state,
       action: PayloadAction<Socket<DefaultEventsMap, DefaultEventsMap>>
@@ -43,5 +46,6 @@ export const {
   joinedGame,
   leftGame,
   setUserId,
+  removeGameToken,
 } = socketSlice.actions;
 export default socketSlice.reducer;

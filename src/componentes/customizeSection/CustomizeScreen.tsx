@@ -6,18 +6,23 @@ import customizationOptions from "./customizationOptions";
 import fetchApi from "../../generalUtils/axios";
 import { socketApiBaseUrl } from "../../utils/environmentVars";
 import { authAxiosConfig } from "../../constants/axios";
+import mainStore from "../../redux/mainStore";
+import { setBackground } from "../../redux/slices/environmentCustomizationSlice";
+import { BackgroundTypes } from "../../types/socketTypes";
+import { backgroundDict } from "../../constants/customizationDict";
 
 const CustomizeScreen = () => {
   const navigate = useNavigate();
-  const [selectedBackground, setSelectedBackground] = useState<string | null>(
-    customizationOptions.background[0] || null
-  );
+  const [selectedBackground, setSelectedBackground] =
+    useState<BackgroundTypes | null>(
+      customizationOptions.background[0] || null
+    );
   const [selectedLogo, setSelectedLogo] = useState<string | null>(
     customizationOptions.logos[0] || null
   );
 
   const sendNewCustomizationToServer = async (
-    background: string,
+    background: BackgroundTypes,
     logo: string
   ) => {
     const res = await fetchApi(
@@ -27,7 +32,12 @@ const CustomizeScreen = () => {
       authAxiosConfig(),
       { background, logo }
     );
-    console.log(res);
+    console.log(background);
+    if (res.success) {
+      mainStore.dispatch(setBackground(background));
+      const rootElement = document.getElementById("root") as HTMLElement;
+      rootElement.style.backgroundImage = `url('${backgroundDict[background]}')`;
+    }
   };
 
   return (

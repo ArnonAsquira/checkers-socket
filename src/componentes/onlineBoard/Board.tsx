@@ -23,6 +23,8 @@ import ChatDialog from "./chat/ChatDialog";
 import { resetChat } from "../../redux/slices/chatSlice";
 import { gameOptionsPath } from "../../login_src/constants/appPaths";
 import Swal from "sweetalert2";
+import { removeGameToken } from "../../redux/slices/socketSlice";
+import InvitePlayerDialog from "./InvitePlayerDialog";
 
 const OnlineBoard = () => {
   const socketSlice = useSelector((state: MainStore) => state.socket);
@@ -90,6 +92,7 @@ const OnlineBoard = () => {
         authAxiosConfig()
       );
       mainStore.dispatch(cleanGame(1));
+      mainStore.dispatch(removeGameToken());
       navigate(gameOptionsPath);
       mainStore.dispatch(resetChat());
     } catch (err: any) {
@@ -170,6 +173,7 @@ const OnlineBoard = () => {
         <ChatDialog gameId={socketSlice.gameToken} />
       </div>
       <GameInfo timers={timers} players={players} currentTurn={currentTurn} />
+      <InvitePlayerDialog />
       <div id="board">{rows.map((row) => row)}</div>
     </Fragment>
   );

@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@200&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
 
 body {
   background-color: #34495e;
@@ -57,6 +58,8 @@ body {
   flex-direction: column;
   div {
     flex: 1;
+    // width: 7.5vw;
+    // height: 10vh;
     border: 1px solid black;
     border-collapse: collapse;
     display: flex;
@@ -64,7 +67,8 @@ body {
     margin: 0;
     padding: 0;
     div {
-      flex: 1;
+      width: 7.5vw;
+      height: 10vh;
     }
   }
 }
@@ -195,12 +199,13 @@ body {
   left: 0;
   top: 0;
   width: 20vw;
-  height: 30vh;
-  background-color: #535c68;
+  height: 40vh;
+  background-color: #5a6470;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   .player {
+    margin-top: 10%;
     .one {
       color: darkred;
     }
@@ -325,4 +330,16 @@ body {
       background-color: #1289a7;
     }
   }
+}
+
+.timer {
+  padding: 5px;
+  border: 1px solid black;
+  background-color: #34495e;
+  color: #2ecc71;
+  font-weight: 600;
+  font-family: "VT323", monospace;
+  width: 100px;
+  text-align: center;
+  font-size: larger;
 }

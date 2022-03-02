@@ -9,7 +9,7 @@ import { useSelector, useStore } from "react-redux";
 import { MainStore } from "../redux/mainStore";
 import { ICostumizationData, INewGameResponse } from "../types/socketTypes";
 import axios from "axios";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { joinSocketGame } from "../socketLogic/initialConnection";
 import { authAxiosConfig } from "../constants/axios";
 import StatisticsView from "./statistics/StatsMainScreen";
@@ -18,10 +18,13 @@ import { backgroundDict } from "../constants/customizationDict";
 import { setBackground } from "../redux/slices/environmentCustomizationSlice";
 import { updateInitialGameData } from "./services/game";
 import Swal from "sweetalert2";
+import CreateGameDiaolog from "./CreateGameDialog";
 
 const GameOptions = () => {
+  const [openCreateGameDialog, setOpenCreateGameDialog] =
+    useState<boolean>(false);
+
   const socketSlice = useSelector((state: MainStore) => state.socket);
-  const gameToken = socketSlice.gameToken;
   const userId = socketSlice.userId;
   const costumizationSlice = useSelector(
     (state: MainStore) => state.customization
@@ -50,29 +53,6 @@ const GameOptions = () => {
     const rootElement = document.getElementById("root") as HTMLElement;
     rootElement.style.backgroundImage = `url('${backgroundDict[backgroundSetting]}')`;
   }, [backgroundSetting]);
-
-  const handleOnlineGameCreation = async () => {
-    if (!userId) {
-      return;
-    }
-    try {
-      const createGameRes = await fetchApi<INewGameResponse>(
-        socketApiBaseUrl,
-        "game/create",
-        "post",
-        authAxiosConfig(),
-        { timer: 600 }
-      );
-      if (!createGameRes.success) {
-        Swal.fire({ icon: "error", text: "could not create game" });
-      }
-      updateInitialGameData(createGameRes.data, socketSlice.userId);
-      joinSocketGame(createGameRes.data.gameId, userId);
-      navigate(onlineChckersPath);
-    } catch (e) {
-      return Swal.fire({ icon: "error", text: "could not connect to servers" });
-    }
-  };
 
   const goToOfflineGame = () => {
     navigate(offlineGamePath);
@@ -107,8 +87,12 @@ const GameOptions = () => {
   return (
     <div className="game-options-menu">
       <h1>game options</h1>
+      <CreateGameDiaolog open={openCreateGameDialog} />
       <div>
-        <button className="generate-token" onClick={handleOnlineGameCreation}>
+        <button
+          className="generate-token"
+          onClick={() => setOpenCreateGameDialog(!openCreateGameDialog)}
+        >
           create game
         </button>
         <button className="play-localy" onClick={goToOfflineGame}>
@@ -137,11 +121,6 @@ const GameOptions = () => {
         </button>
       </div>
       <div>
-        {gameToken ? (
-          <div className="game-token">
-            game token <span>{gameToken}</span>
-          </div>
-        ) : null}
         <div className="go-to-customize">
           <button onClick={() => navigate(customizePath)}>
             customize environment

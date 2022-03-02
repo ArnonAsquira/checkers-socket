@@ -39,9 +39,10 @@ const player = ({
       ) : logo ? (
         <span
           style={{
-            fontSize: "3rem",
+            fontSize: "200%",
             marginRight: "auto",
             marginLeft: "auto",
+            marginTop: "15%",
           }}
         >
           {logo}
