@@ -1,5 +1,6 @@
 import { Fragment, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 import { authAxiosConfig } from "../../constants/axios";
 import fetchApi from "../../generalUtils/axios";
 import { MainStore } from "../../redux/mainStore";
@@ -23,8 +24,9 @@ const InvitePlayerDialog = () => {
       authAxiosConfig(),
       { gameToken, userEmail }
     );
-    console.log(invitationRes.data);
-    // Swal.fire(invitationRes.data);
+    if (typeof invitationRes.data === "string") {
+      Swal.fire(invitationRes.data);
+    }
   };
 
   return (

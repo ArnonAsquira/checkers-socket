@@ -47,6 +47,7 @@ const App = () => {
   useEffect(() => {
     if (userId === null) {
       navigate("/");
+    } else {
       makeSocketConnection(socketApiBaseUrl);
     }
   }, [userId]);
