@@ -43,7 +43,11 @@ const ChatDialog: FC<IChatDialogProps> = ({ gameId }) => {
       <div className="unseen-messages-counter">
         {chatSlice.unseenMessagesCount}
       </div>
-      <dialog className="chat-dialog" open={chatSlice.chatIsOpen}>
+      <dialog
+        className="chat-dialog"
+        open={chatSlice.chatIsOpen}
+        style={{ position: "fixed", zIndex: 100 }}
+      >
         <div className="messages-area">
           {chatSlice.messages.map((message, i) => (
             <div

@@ -33,6 +33,7 @@ const InvitePlayerDialog = () => {
     <Fragment>
       <button
         style={{ position: "absolute", top: "25%", right: 0 }}
+        className="invite-button"
         onClick={() => setOpen(!open)}
       >
         invite player

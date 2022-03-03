@@ -343,3 +343,9 @@ body {
   text-align: center;
   font-size: larger;
 }
+
+dialog {
+  button {
+    @include button(black, black, white);
+  }
+}
