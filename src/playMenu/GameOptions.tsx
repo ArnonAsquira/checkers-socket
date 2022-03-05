@@ -122,9 +122,7 @@ const GameOptions = () => {
       </div>
       <div>
         <div className="go-to-customize">
-          <button onClick={() => navigate(customizePath)}>
-            customize environment
-          </button>
+          <button onClick={() => navigate(customizePath)}>customize</button>
         </div>
       </div>
     </div>

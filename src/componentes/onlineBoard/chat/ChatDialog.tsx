@@ -46,7 +46,7 @@ const ChatDialog: FC<IChatDialogProps> = ({ gameId }) => {
       <dialog
         className="chat-dialog"
         open={chatSlice.chatIsOpen}
-        style={{ position: "fixed", zIndex: 100 }}
+        style={{ zIndex: 100 }}
       >
         <div className="messages-area">
           {chatSlice.messages.map((message, i) => (

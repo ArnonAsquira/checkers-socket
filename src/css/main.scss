@@ -170,9 +170,11 @@ body {
   .go-to-customize {
     position: absolute;
     top: 10%;
-    right: 10%;
+    right: 15%;
     button {
       @include button(white, #3498db, black);
+      padding: 8% 2.5%;
+      border-radius: 2%;
     }
   }
 }
@@ -231,7 +233,7 @@ body {
 
 .chat-dialog {
   position: absolute;
-  left: -300%;
+  left: -600%;
   top: 50%;
   .messages-area {
     background-color: #95afc0;
@@ -347,5 +349,11 @@ body {
 dialog {
   button {
     @include button(black, black, white);
+    padding: 2% 5%;
   }
+}
+
+.invite-button {
+  @include button(black, black, white);
+  padding: 1% 2%;
 }

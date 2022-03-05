@@ -295,7 +295,7 @@ body {
 .game-options-menu .go-to-customize {
   position: absolute;
   top: 10%;
-  right: 10%;
+  right: 15%;
 }
 
 .game-options-menu .go-to-customize button {
@@ -311,6 +311,8 @@ body {
   font-family: inherit;
   font-weight: 600;
   cursor: pointer;
+  padding: 8% 2.5%;
+  border-radius: 2%;
 }
 
 .game-options-menu .go-to-customize button:hover {
@@ -405,7 +407,7 @@ body {
 
 .chat-dialog {
   position: absolute;
-  left: -300%;
+  left: -600%;
   top: 50%;
 }
 
@@ -605,9 +607,30 @@ dialog button {
   font-family: inherit;
   font-weight: 600;
   cursor: pointer;
+  padding: 2% 5%;
 }
 
 dialog button:hover {
+  background-color: black;
+}
+
+.invite-button {
+  background-color: black;
+  color: white;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  border-radius: 2%;
+  border: none;
+  outline: none;
+  padding: 5% 15%;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 1% 2%;
+}
+
+.invite-button:hover {
   background-color: black;
 }
 /*# sourceMappingURL=main.css.map */
