@@ -7,9 +7,7 @@ interface BoardSqaureProps {
   location: Location;
   color: "light" | "dark";
   player: "red" | "blue" | "indicator" | undefined;
-  setSelectedPiece: Dispatch<
-    React.SetStateAction<IPieceInfoObject | null>
-  > | null;
+  setSelectedPiece: (piece: IPieceInfoObject) => void | null;
   isSelectedPiece: boolean;
   takeTurn: (newLocation: Location) => void;
   isQueen: boolean;
