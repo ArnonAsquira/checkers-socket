@@ -7,7 +7,7 @@ import { baseUrl } from "../constants";
 import { LoginValues } from "../types/loginTypes";
 import { SignUpValues } from "../types/signUpTypes";
 import { useNavigate } from "react-router-dom";
-import { playMenuPath } from "../constants/appPaths";
+import { gameOptionsPath, playMenuPath } from "../constants/appPaths";
 import { useStore } from "react-redux";
 import { setUserId } from "../../redux/slices/socketSlice";
 import axios from "axios";
@@ -50,7 +50,7 @@ export default function InputField() {
     const userId = data.id;
     document.cookie = token;
     mainStore.dispatch(setUserId(userId));
-    navigate(playMenuPath);
+    navigate(gameOptionsPath);
   };
 
   return (

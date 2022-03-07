@@ -6,6 +6,9 @@ import {
   IPieceInfoObject,
 } from "../../types/boardTypes";
 import arrayEqual, { arrayIncludes } from "./arrayEqual";
+import BoardSqaure from "../BoardSquare";
+import { determinePieceViaLocation } from "./gameUtils";
+import { ILocalGameObj } from "./gameObject";
 
 const oppositeColor = (color: "red" | "blue"): "red" | "blue" => {
   return color === "red" ? "blue" : "red";
@@ -151,4 +154,60 @@ const indicatorLocations = (
   );
 };
 
-export { indicatorLocations, oppositeColor, diagonalSquares };
+const determineIsQueen = (location: Location, positions: IBoardPositions) => {
+  return (
+    arrayIncludes(
+      location,
+      positions.red.filter((info) => info.isQueen).map((info) => info.location)
+    ) ||
+    arrayIncludes(
+      location,
+      positions.blue.filter((info) => info.isQueen).map((info) => info.location)
+    )
+  );
+};
+
+const createCheckersBoard = (
+  quardinatnts: Location[],
+  amountOfRows: number,
+  gameObj: ILocalGameObj,
+  selectPiece: (piece: IPieceInfoObject) => void,
+  takeTurn: (indicatorLocation: Location) => void
+) => {
+  const rows = [];
+  for (let i = 0; i < quardinatnts.length; i += amountOfRows) {
+    rows.push(
+      <div style={{ minHeight: "50px" }}>
+        {quardinatnts.slice(i, i + amountOfRows).map((location) => {
+          return (
+            <BoardSqaure
+              location={location}
+              color={(location[0] + location[1]) % 2 === 0 ? "light" : "dark"}
+              player={determinePieceViaLocation(
+                location,
+                gameObj.positions,
+                gameObj.indicators
+              )}
+              setSelectedPiece={selectPiece}
+              isSelectedPiece={
+                gameObj.selectedPiece === null
+                  ? false
+                  : arrayEqual(gameObj.selectedPiece.location, location)
+              }
+              takeTurn={takeTurn}
+              isQueen={determineIsQueen(location, gameObj.positions)}
+            />
+          );
+        })}
+      </div>
+    );
+  }
+  return rows;
+};
+
+export {
+  indicatorLocations,
+  oppositeColor,
+  diagonalSquares,
+  createCheckersBoard,
+};

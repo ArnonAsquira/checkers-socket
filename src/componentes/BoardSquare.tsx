@@ -1,15 +1,14 @@
 import Player from "./Player";
 import { IPieceInfoObject, Location } from "../types/boardTypes";
-import { Dispatch } from "react";
 import PossibleMoveIndicator from "./PossibleMoveIndicator";
 
 interface BoardSqaureProps {
   location: Location;
   color: "light" | "dark";
   player: "red" | "blue" | "indicator" | undefined;
-  setSelectedPiece: (piece: IPieceInfoObject) => void | null;
+  setSelectedPiece: ((piece: IPieceInfoObject) => void) | null;
   isSelectedPiece: boolean;
-  takeTurn: (newLocation: Location) => void;
+  takeTurn: (indicatorLocation: Location) => void;
   isQueen: boolean;
 }
 

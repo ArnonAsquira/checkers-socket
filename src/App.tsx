@@ -1,13 +1,11 @@
 import Board from "./componentes/Board";
 import SignUpApp from "./login_src/App";
-import PlayMenu from "./playMenu/Menu";
 import GameOptions from "./playMenu/GameOptions";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import {
   gameOptionsPath,
   offlineGamePath,
   onlineChckersPath,
-  playMenuPath,
   customizePath,
 } from "./constants/appPaths";
 import OnlineBoard from "./componentes/onlineBoard/Board";
@@ -55,7 +53,6 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<SignUpApp />} />
-      <Route path={playMenuPath} element={<PlayMenu />} />
       <Route path={gameOptionsPath} element={<GameOptions />} />
       <Route path={customizePath} element={<CustomizeScreen />} />
       <Route

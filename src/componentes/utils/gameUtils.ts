@@ -9,8 +9,24 @@ import { indicatorLocations, oppositeColor } from "./boardUtils";
 import arrayEqual, { arrayIncludes } from "./arrayEqual";
 import { ILocalGameObj } from "./gameObject";
 
+const indicatorInMandatoryMoves = (
+  mandatoryMoves: IndicatorInfo[],
+  indicators: IndicatorInfo[]
+): boolean => {
+  if (mandatoryMoves.length < 1) {
+    return true;
+  }
+  for (const indicator of indicators) {
+    for (const move of mandatoryMoves) {
+      if (arrayEqual(move.location, indicator.location)) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
 const isValidPiece = (gameObj: ILocalGameObj): boolean => {
-  let isValid = false;
   if (gameObj.mandatoryMoves.length < 0) return true;
   const pieceIndicators = indicatorLocations(
     gameObj.selectedPiece,
@@ -18,14 +34,44 @@ const isValidPiece = (gameObj: ILocalGameObj): boolean => {
     gameObj.currentTurn,
     gameObj.turnCounter === 0
   );
-  for (const indicator of pieceIndicators) {
-    for (const move of gameObj.mandatoryMoves) {
-      if (arrayEqual(move.location, indicator.location)) {
-        isValid = true;
-      }
-    }
+  return indicatorInMandatoryMoves(gameObj.mandatoryMoves, pieceIndicators);
+};
+
+const pieceCanBeSlected = (gameObj: ILocalGameObj, piece: IPieceInfoObject) => {
+  if (gameObj.turnCounter > 0) {
+    return false;
   }
-  return isValid;
+  const correctPieceTurn = gameObj.positions[gameObj.currentTurn].find(
+    (turnsPiece) => arrayEqual(turnsPiece.location, piece.location)
+  );
+  if (!correctPieceTurn) {
+    return false;
+  }
+  const pieceIndicators = indicatorLocations(
+    piece,
+    gameObj.positions,
+    gameObj.currentTurn,
+    true
+  );
+  return indicatorInMandatoryMoves(gameObj.mandatoryMoves, pieceIndicators);
+};
+
+const selectPiece = (
+  piece: IPieceInfoObject,
+  gameObj: ILocalGameObj
+): ILocalGameObj => {
+  if (!pieceCanBeSlected(gameObj, piece)) {
+    alert("invalid piece");
+    return gameObj;
+  }
+  gameObj.selectedPiece = piece;
+  gameObj.indicators = indicatorLocations(
+    piece,
+    gameObj.positions,
+    gameObj.currentTurn,
+    true
+  );
+  return gameObj;
 };
 
 const reachedEndOfBoard = (location: Location, color: PlatyerColors) => {
@@ -63,9 +109,10 @@ const switchTurn = (gameObj: ILocalGameObj) => {
 };
 
 const takeTurn = (gameObj: ILocalGameObj, indicator: IndicatorInfo) => {
-  if (gameObj.selectedPiece === null) return;
+  if (gameObj.selectedPiece === null) return gameObj;
   if (!isValidPiece(gameObj)) {
-    return;
+    alert("invalid piece");
+    return gameObj;
   }
   const newPositions = updatePositions(
     gameObj.positions,
@@ -84,12 +131,13 @@ const takeTurn = (gameObj: ILocalGameObj, indicator: IndicatorInfo) => {
     gameObj.positions,
     gameObj.currentTurn,
     false
-  );
-  if (consecutiveDangerIndicators.length > 0) {
+  ).filter((indicator) => indicator.endangers);
+  if (consecutiveDangerIndicators.length > 0 && indicator.endangers) {
     gameObj.mandatoryMoves = consecutiveDangerIndicators;
   } else {
     switchTurn(gameObj);
   }
+  return gameObj;
 };
 
 const determinePieceViaLocation = (
@@ -116,4 +164,4 @@ const determinePieceViaLocation = (
     : undefined;
 };
 
-export { takeTurn, isValidPiece, determinePieceViaLocation };
+export { takeTurn, isValidPiece, determinePieceViaLocation, selectPiece };
